@@ -10,6 +10,7 @@
 #include <window.h>
 #include <misc.h>
 #include <constant.h>
+#include <myfonct.h>
 
 struct player {
 	int x, y;
@@ -72,17 +73,19 @@ void player_dec_nb_bomb(struct player* player) {
 }
 
 static int player_move_aux(struct player* player, struct map* map, int x, int y) {
+	enum direction direction;
+	direction=player->direction;
 
 	if (!map_is_inside(map, x, y))
 		return 0;
 
 	switch (map_get_cell_type(map, x, y)) {
 	case CELL_SCENERY:
-		return 1;
+		return 0;		// Les mouvements du joueur sont limités les éléments de décors
 		break;
 
 	case CELL_BOX:
-		return 1;
+		return boxe_move(direction,map,x,y);
 		break;
 
 	case CELL_BONUS:
@@ -145,4 +148,3 @@ void player_display(struct player* player) {
 	window_display_image(sprite_get_player(player->direction),
 			player->x * SIZE_BLOC, player->y * SIZE_BLOC);
 }
-
