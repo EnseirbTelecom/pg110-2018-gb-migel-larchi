@@ -22,23 +22,24 @@ struct bomb_list* bomb_list_init(){
   return bombs;
 };
 
-void bomb_list_free_first_ele(struct bomb_list* bomb_list){
-  assert(bomb_list);
-  struct bomb_list* first_ele=bomb_list;
-  bomb_free(first_ele->bomb);
-  bomb_list=bomb_list->next;
-  free(first_ele);
+void bomb_list_free_first_ele(struct bomb_list** bomb_list){
+  struct bomb_list* first_ele=*bomb_list;
+  first_ele=first_ele->next;
+  bomb_free((*bomb_list)->bomb);
+  free(*bomb_list);
+  *bomb_list=first_ele;
 };
 
-void bomb_list_free(struct bomb_list* bomb_list){
-  assert(bomb_list);
-  while (bomb_list!=NULL) {
+
+void bomb_list_free(struct bomb_list** bomb_list){
+  assert(*bomb_list);
+  while (*bomb_list!=NULL) {
     bomb_list_free_first_ele(bomb_list);
   }
 };
 
-void bomb_list_display(struct bomb_list* bomb_list){
-  struct bomb_list* bombs=bomb_list;
+
+
   while (bombs->bomb) {
       bomb_display(bombs->bomb);
       bombs=(bombs->next);
