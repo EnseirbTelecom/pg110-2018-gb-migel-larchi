@@ -39,11 +39,22 @@ void bomb_list_free(struct bomb_list** bomb_list){
 };
 
 
+void bomb_list_update(struct bomb_list** bomb_list){
+  if((*bomb_list)->bomb){
+    if (bomb_get_state((*bomb_list)->bomb)==0) {
+      printf("bomb\n");
+      bomb_list_free_first_ele(bomb_list);
+    }
+  }
+};
 
+void bomb_list_display(struct bomb_list** bomb_list){
+  struct bomb_list* bombs=*bomb_list;
   while (bombs->bomb) {
       bomb_display(bombs->bomb);
       bombs=(bombs->next);
   }
+  bomb_list_update(bomb_list);
 };
 
 void bomb_list_add(struct player* player,struct bomb_list* bomb_list){
