@@ -32,6 +32,15 @@ void bomb_free(struct bomb* bomb){
   free(bomb);
 };
 
+int bomb_get_state(struct bomb* bomb){
+  assert(bomb);
+  int state=SDL_GetTicks() - bomb->TIME;
+  state=state/1000;
+  if(state>3)
+    state=3;
+  return 3-state;
+};
+
 void bomb_display(struct bomb* bomb){
   assert(bomb);
   window_display_image(sprite_get_bomb(bomb->TIME),
