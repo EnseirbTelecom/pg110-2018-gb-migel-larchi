@@ -36,9 +36,7 @@ int bomb_get_state(struct bomb* bomb){
   assert(bomb);
   int state=SDL_GetTicks() - bomb->TIME;
   state=state/1000;
-  if(state>3)
-    state=3;
-  return 3-state;
+  return 4-state;
 };
 
 void bomb_display(struct bomb* bomb){
