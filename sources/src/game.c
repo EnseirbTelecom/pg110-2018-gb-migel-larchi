@@ -9,12 +9,15 @@
 #include <misc.h>
 #include <window.h>
 #include <sprite.h>
+#include <bomb_list.h>
+
 
 struct game {
 	struct map** maps;       // the game's map
 	short levels;        // nb maps of the game
 	short level;
 	struct player* player;
+	struct bomb_list* bombs; //list of bombs
 };
 
 struct game*
@@ -26,8 +29,9 @@ game_new(void) {
 	game->maps[0] = map_get_static();
 	game->levels = 1;
 	game->level = 0;
-
+	game->bombs=bomb_list_init();
 	game->player = player_init(3);
+
 	// Set default location of the player
 	player_set_position(game->player, 1, 0);
 
@@ -91,7 +95,7 @@ void game_display(struct game* game) {
 	game_banner_display(game);
 	map_display(game_get_current_map(game));
 	player_display(game->player);
-
+	bomb_list_display(game->bombs);
 	window_refresh();
 }
 
@@ -99,7 +103,7 @@ static short input_keyboard(struct game* game) {
 	SDL_Event event;
 	struct player* player = game_get_player(game);
 	struct map* map = game_get_current_map(game);
-
+	struct bomb_list* bomb_list=game->bombs;
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -126,6 +130,10 @@ static short input_keyboard(struct game* game) {
 				player_move(player, map);
 				break;
 			case SDLK_SPACE:
+				if(player_get_nb_bomb(player)>=1){
+					bomb_list_add(player,bomb_list);
+					player_dec_nb_bomb(player);
+				}
 				break;
 			default:
 				break;
