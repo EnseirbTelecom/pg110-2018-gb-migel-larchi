@@ -21,7 +21,7 @@ struct bomb* bomb_init(struct player* player){
 
   bomb->x=player_get_x(player);
   bomb->y=player_get_y(player);
-  bomb->TIME=3;
+  bomb->TIME=SDL_GetTicks() ;
   bomb->player=player;
   return bomb;
 };
@@ -43,6 +43,7 @@ int bomb_get_state(struct bomb* bomb){
 
 void bomb_display(struct bomb* bomb){
   assert(bomb);
-  window_display_image(sprite_get_bomb(bomb->TIME),
+  int state=bomb_get_state(bomb);
+  window_display_image(sprite_get_bomb(state),
   (bomb->x)* SIZE_BLOC,(bomb->y)* SIZE_BLOC);
 };
