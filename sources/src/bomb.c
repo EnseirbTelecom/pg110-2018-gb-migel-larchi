@@ -32,10 +32,6 @@ void bomb_free(struct bomb* bomb){
   free(bomb);
 };
 
-void bomb_list_free(struct bomb_list* bombs) {
-  assert(bombs);
-  free(bombs);
-}
 void bomb_display(struct bomb* bomb){
   assert(bomb);
   window_display_image(sprite_get_bomb(bomb->TIME),
