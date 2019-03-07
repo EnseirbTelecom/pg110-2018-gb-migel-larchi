@@ -95,7 +95,7 @@ void game_display(struct game* game) {
 	game_banner_display(game);
 	map_display(game_get_current_map(game));
 	player_display(game->player);
-	bomb_list_display(&(game->bombs));
+	bomb_list_display(game_get_current_map(game),&(game->bombs));
 	window_refresh();
 }
 
