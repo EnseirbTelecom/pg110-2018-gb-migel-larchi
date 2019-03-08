@@ -39,17 +39,17 @@ void bomb_list_free(struct bomb_list** bomb_list){
 };
 
 
-void bomb_list_update(struct bomb_list** bomb_list){
   if((*bomb_list)->bomb){
     if (bomb_get_state((*bomb_list)->bomb)<0) {
       bomb_list_free_first_ele(bomb_list);
+      player_inc_nb_bomb(player);
     }
   }
 };
 
-void bomb_list_display(struct map* map,struct bomb_list** bomb_list){
+void bomb_list_display(struct map* map,struct player* player,struct bomb_list** bomb_list){
   //utilisé dans game.c
-  bomb_list_update(bomb_list);
+  bomb_list_update(player,bomb_list);
   struct bomb_list* bombs=*bomb_list;
   while (bombs->bomb) {
       bomb_display(map,bombs->bomb);
