@@ -37,6 +37,10 @@ void player_set_position(struct player *player, int x, int y) {
 	player->y = y;
 }
 
+void player_set_range(struct player *player, int range){
+	assert(player);
+	player->range =range;
+}
 
 void player_free(struct player* player) {
 	assert(player);

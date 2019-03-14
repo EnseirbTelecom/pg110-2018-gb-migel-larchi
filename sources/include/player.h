@@ -17,6 +17,9 @@ void   player_free(struct player* player);
 // Set the position of the player
 void player_set_position(struct player *player, int x, int y);
 
+// Set the range of the player
+void player_set_range(struct player *player, int range);
+
 // Returns the current position of the player
 int player_get_x(struct player* player);
 int player_get_y(struct player* player);
