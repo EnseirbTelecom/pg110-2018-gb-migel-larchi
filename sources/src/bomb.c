@@ -21,9 +21,14 @@ struct bomb* bomb_init(struct player* player){
   if (!bomb)
     error("Memory error");
 
-  bomb->x=player_get_x(player);
-  bomb->y=player_get_y(player);
+  int x=player_get_x(player);
+  int y=player_get_y(player);
+
+  map_set_cell_type(map,x,y,CELL_BOMB);
+  bomb->x=x;
+  bomb->y=y;
   bomb->TIME=SDL_GetTicks() ;
+  bomb->exploded=0;
   bomb->player=player;
   return bomb;
 };

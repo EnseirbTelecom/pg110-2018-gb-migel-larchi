@@ -3,7 +3,7 @@
 struct bomb;
 
 //creates a bomb
-struct bomb* bomb_init(struct player* player);
+struct bomb* bomb_init(struct map* map,struct player* player);
 void bomb_free(struct bomb* bomb);
 
 // Get bomb->player
