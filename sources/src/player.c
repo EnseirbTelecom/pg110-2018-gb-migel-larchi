@@ -16,6 +16,7 @@ struct player {
 	int x, y;
 	enum direction direction;
 	int bombs;
+	int  range;
 };
 
 struct player* player_init(int bombs) {
