@@ -18,7 +18,8 @@ struct bomb{
   struct player* player;
 };
 
-struct bomb* bomb_init(struct player* player){
+struct bomb* bomb_init(struct map* map,struct player* player){
+  //utiliser dans bomb_list_add
   struct bomb* bomb=malloc(sizeof(*bomb));
   if (!bomb)
     error("Memory error");
