@@ -131,7 +131,7 @@ static short input_keyboard(struct game* game) {
 				break;
 			case SDLK_SPACE:
 				if(player_get_nb_bomb(player)>=1){
-					bomb_list_add(player,bomb_list);
+					bomb_list_add(map,player,bomb_list);
 					player_dec_nb_bomb(player);
 				}
 				break;

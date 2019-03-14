@@ -57,8 +57,9 @@ void bomb_list_display(struct map* map,struct player* player,struct bomb_list** 
   }
 };
 
-void bomb_list_add(struct player* player,struct bomb_list* bomb_list){
-  struct bomb* bomb=bomb_init(player);
+void bomb_list_add(struct map* map,struct player* player,struct bomb_list* bomb_list){
+  //utiliser dans game.c
+  struct bomb* bomb=bomb_init(map,player);
   struct bomb_list* bomb_list_aux=bomb_list;
   while (bomb_list_aux->bomb) {
     bomb_list_aux=bomb_list_aux->next;
