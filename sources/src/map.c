@@ -154,6 +154,11 @@ void map_display(struct map* map)
 	      // pas de gestion du type de porte
 	      window_display_image(sprite_get_door_opened(), x, y);
 	      break;
+			case CELL_BOMB:
+				break;
+			case CELL_EXPLOSION:
+				window_display_image(sprite_get_bomb(0),x,y);
+				break;
 	    }
 	  }
 	}
