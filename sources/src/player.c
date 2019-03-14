@@ -57,6 +57,12 @@ int player_get_y(struct player* player) {
 	return player->y;
 }
 
+int player_get_range(struct player* player){
+	assert(player != NULL);
+	return player->range;
+}
+
+
 void player_set_current_way(struct player* player, enum direction way) {
 	assert(player);
 	player->direction = way;
