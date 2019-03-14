@@ -9,6 +9,8 @@
 #include <constant.h>
 #include  <map.h>
 
+#define portee 4
+
 struct bomb{
   int x,y;
   int TIME;
