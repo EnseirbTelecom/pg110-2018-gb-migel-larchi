@@ -12,6 +12,7 @@
 struct bomb{
   int x,y;
   int TIME;
+  int exploded;
   struct player* player;
 };
 
