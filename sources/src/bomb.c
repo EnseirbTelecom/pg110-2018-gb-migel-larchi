@@ -42,6 +42,22 @@ void bomb_free(struct bomb* bomb){
   free(bomb);
 };
 
+struct player *bomb_get_player(struct bomb *bomb){
+  assert (bomb);
+  return bomb->player;
+};
+
+int bomb_get_exploded(struct bomb *bomb){
+  assert(bomb);
+  return bomb->exploded;
+};
+
+
+void bomb_set_exploded(struct bomb *bomb,int exploded){
+  assert(bomb);
+  bomb->exploded=exploded;
+};
+
 int bomb_get_state(struct bomb* bomb){
   assert(bomb);
   int state=SDL_GetTicks() - bomb->TIME;
