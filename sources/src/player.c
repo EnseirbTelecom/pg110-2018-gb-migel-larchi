@@ -83,6 +83,16 @@ void player_dec_nb_bomb(struct player* player) {
 	player->bombs -= 1;
 }
 
+void player_inc_range(struct player * player){
+	assert(player);
+	player->range += 1;
+}
+
+void player_dec_range(struct player * player){
+	assert(player);
+	player->range -= 1;
+}
+
 static int player_move_aux(struct player* player, struct map* map, int x, int y) {
 	enum direction direction;
 	direction=player->direction;
