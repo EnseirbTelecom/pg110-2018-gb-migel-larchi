@@ -84,6 +84,10 @@ static int player_move_aux(struct player* player, struct map* map, int x, int y)
 		return 0;		// Les mouvements du joueur sont limités les éléments de décors
 		break;
 
+	case CELL_BOMB:
+		return 0;
+		break;
+
 	case CELL_BOX:
 		return boxe_move(direction,map,x,y);
 		break;
