@@ -115,7 +115,7 @@ static int player_move_aux(struct player* player, struct map* map, int x, int y)
 
 	case CELL_BONUS:
 		map_set_cell_type(map,x,y,CELL_EMPTY);
-		player_inc_range(player);
+		cell_bonus_move(map,player,x,y);
 		break;
 
 	case CELL_MONSTER:
