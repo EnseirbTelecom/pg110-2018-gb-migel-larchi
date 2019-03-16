@@ -55,13 +55,15 @@ void bomb_list_update(struct map *map, struct bomb_list** bomb_list){
   struct bomb *bomb=(*bomb_list)->bomb;
   if(bomb){
     if ( bomb_get_state(bomb)<0 ){
+      struct player *player=bomb_get_player(bomb);
       bomb_explosion_end(map,bomb);
       bomb_list_set_exploded_to_2( (*bomb_list)->next);
       bomb_list_free_first_ele(bomb_list);
-      player_inc_nb_bomb(bomb_get_player(bomb));
+    if(player_get_max_bomb(player)>player_get_nb_bomb(player))
+        player_inc_nb_bomb(player);
     }
   }
-};
+}
 
 void bomb_list_display(struct map* map,struct bomb_list** bomb_list){
   //utilisé dans game.c
@@ -71,7 +73,7 @@ void bomb_list_display(struct map* map,struct bomb_list** bomb_list){
       bomb_display(map,bombs->bomb);
       bombs=(bombs->next);
   }
-};
+}
 
 void bomb_list_add(struct map* map,struct player* player,struct bomb_list* bomb_list){
   //utiliser dans game.c

@@ -39,35 +39,35 @@ int boxe_move(enum direction direction,struct map* map,int x,int y){
 
 void cell_bonus_move(struct map* map,struct player *player,int x,int y){
   enum bonus_type bonus_type= map_get_bonus_type(map,x,y);
-  printf("%d\n",bonus_type );
   switch (bonus_type) {
     case BONUS_BOMB_RANGE_INC:
-      printf("ok\n");
+    if (player_get_range(player)<9)
       player_inc_range(player);
     break;
 
     case BONUS_BOMB_RANGE_DEC:
     if(player_get_range(player)>1)
       player_dec_range(player);
-    printf("ko\n");
     break;
 
     case BONUS_BOMB_NB_INC:
-    player_inc_nb_bomb(player);
-    printf("ko\n");
+    if (player_get_max_bomb(player)<9)
+      player_inc_max_bomb(player);
+    if(player_get_nb_bomb(player)<9)
+      player_inc_nb_bomb(player);
     break;
 
     case BONUS_BOMB_NB_DEC:
-    player_dec_nb_bomb(player);
-    printf("ko\n");
+      if(player_get_max_bomb(player)>1)
+        player_dec_max_bomb(player);
+      if(player_get_nb_bomb(player)>0)
+        player_dec_nb_bomb(player);
     break;
 
     case BONUS_LIFE:
-    printf("ko\n");
     break;
 
     case BONUS_MONSTER:
-    printf("ko\n");
     break;
   }
 }

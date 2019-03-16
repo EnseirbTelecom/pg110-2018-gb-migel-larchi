@@ -16,6 +16,7 @@ struct player {
 	int x, y;
 	enum direction direction;
 	int bombs;
+	int max_bomb;
 	int  range;
 };
 
@@ -25,8 +26,8 @@ struct player* player_init(int bombs) {
 		error("Memory error");
 
 	player->direction = NORTH;
-	player->bombs = bombs;
-
+	player->bombs = bombs;	 //nb of bomb already put
+	player->max_bomb = bombs;
 	return player;
 }
 
@@ -81,6 +82,21 @@ void player_inc_nb_bomb(struct player* player) {
 void player_dec_nb_bomb(struct player* player) {
 	assert(player);
 	player->bombs -= 1;
+}
+
+int  player_get_max_bomb(struct player * player){
+		assert(player);
+		return player->max_bomb;
+}
+
+void player_inc_max_bomb(struct player* player) {
+	assert(player);
+	player->max_bomb += 1;
+}
+
+void player_dec_max_bomb(struct player* player) {
+	assert(player);
+	player->max_bomb -= 1;
 }
 
 void player_inc_range(struct player * player){
