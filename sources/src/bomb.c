@@ -9,11 +9,10 @@
 #include <constant.h>
 #include  <map.h>
 
-#define portee 4
-
 struct bomb{
   int x,y;
   int TIME;
+  int range;
   int exploded;
   struct player* player;
 };
@@ -33,6 +32,7 @@ struct bomb* bomb_init(struct map* map,struct player* player){
   bomb->TIME=SDL_GetTicks() ;
   bomb->exploded=0;
   bomb->player=player;
+  bomb->range=player_get_range(player);
   return bomb;
 };
 
@@ -168,6 +168,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
 
   int x=bomb->x;
   int y=bomb->y;
+  int range=bomb->range;
 
   int xi=x+1;
   int x_i=x-1;
@@ -176,7 +177,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
 
   if (bomb_get_exploded(bomb)==0) {
     int i=0;
-    while (i<portee) {
+    while (i<range) {
       if(map_is_inside(map,x,yi) && bomb_explosion_map_set_cell(map,x,yi)){
         yi++;
         i++;
@@ -186,7 +187,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
     }
 
     i=0;
-    while (i<portee) {
+    while (i<range) {
       if(map_is_inside(map,x,y_i) && bomb_explosion_map_set_cell(map,x,y_i)){
         y_i--;
         i++;
@@ -196,7 +197,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
     }
 
     i=0;
-    while (i<portee) {
+    while (i<range) {
       if(map_is_inside(map,xi,y) && bomb_explosion_map_set_cell(map,xi,y)){
         xi++;
         i++;
@@ -206,7 +207,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
     }
 
     i=0;
-    while (i<portee) {
+    while (i<range) {
       if(map_is_inside(map,x_i,y) && bomb_explosion_map_set_cell(map,x_i,y)){
         x_i--;
         i++;
@@ -217,7 +218,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
   }
   else if (bomb_get_exploded(bomb)==2) {
     int i=0;
-    while (i<portee) {
+    while (i<range) {
       if(map_is_inside(map,x,yi) && bomb_explosion_map_set_cell_2(map,x,yi)){
         yi++;
         i++;
@@ -227,7 +228,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
     }
 
     i=0;
-    while (i<portee) {
+    while (i<range) {
       if(map_is_inside(map,x,y_i) && bomb_explosion_map_set_cell_2(map,x,y_i)){
         y_i--;
         i++;
@@ -237,7 +238,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
     }
 
     i=0;
-    while (i<portee) {
+    while (i<range) {
       if(map_is_inside(map,xi,y) && bomb_explosion_map_set_cell_2(map,xi,y)){
         xi++;
         i++;
@@ -247,7 +248,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
     }
 
     i=0;
-    while (i<portee) {
+    while (i<range) {
       if(map_is_inside(map,x_i,y) && bomb_explosion_map_set_cell_2(map,x_i,y)){
         x_i--;
         i++;
@@ -265,13 +266,14 @@ void bomb_explosion_end(struct map *map,struct bomb* bomb){
 
   int x=bomb->x;
   int y=bomb->y;
+  int range=bomb->range;
 
   int xi=x+1;
   int x_i=x-1;
   int yi=y+1;
   int y_i=y-1;
   map_set_cell_type(map,x,y,CELL_EMPTY);
-  for ( int i=0 ; i < portee; i++) {
+  for ( int i=0 ; i < range; i++) {
     if(map_is_inside(map,x,yi) && (map_get_cell_type(map,x,yi)==CELL_EXPLOSION|| map_get_cell_type(map,x,yi)==CELL_BOMB)){
       map_set_cell_type(map,x,yi,CELL_EMPTY);
       yi++;
