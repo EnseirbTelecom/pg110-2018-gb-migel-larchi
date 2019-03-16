@@ -47,7 +47,8 @@ void cell_bonus_move(struct map* map,struct player *player,int x,int y){
     break;
 
     case BONUS_BOMB_RANGE_DEC:
-    player_dec_range(player);
+    if(player_get_range(player)>1)
+      player_dec_range(player);
     printf("ko\n");
     break;
 
