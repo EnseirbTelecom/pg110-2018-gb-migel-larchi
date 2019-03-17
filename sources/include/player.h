@@ -17,9 +17,15 @@ void   player_free(struct player* player);
 // Set the position of the player
 void player_set_position(struct player *player, int x, int y);
 
+// Set the range of the player
+void player_set_range(struct player *player, int range);
+
 // Returns the current position of the player
 int player_get_x(struct player* player);
 int player_get_y(struct player* player);
+
+// Returns the current range of the player
+int player_get_range(struct player* player);
 
 // Set the direction of the next move of the player
 void player_set_current_way(struct player * player, enum direction direction);
@@ -29,6 +35,19 @@ int  player_get_nb_bomb(struct player * player);
 void player_inc_nb_bomb(struct player * player);
 void player_dec_nb_bomb(struct player * player);
 
+// Set, Increase, Decrease life of the player
+int  player_get_life(struct player * player);
+void player_inc_life(struct player * player);
+void player_dec_life(struct player * player);
+
+// Increase, Decrease the range
+void player_inc_range(struct player * player);
+void player_dec_range(struct player * player);
+
+// Increase, Decrease the max_bomb
+int  player_get_max_bomb(struct player * player);
+void player_inc_max_bomb(struct player* player);
+void player_dec_max_bomb(struct player* player);
 
 // Move the player according to the current direction
 int player_move(struct player* player, struct map* map);

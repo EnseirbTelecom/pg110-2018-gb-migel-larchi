@@ -13,9 +13,12 @@
 #include <myfonct.h>
 
 struct player {
+	int life;
 	int x, y;
 	enum direction direction;
 	int bombs;
+	int max_bomb;
+	int  range;
 };
 
 struct player* player_init(int bombs) {
@@ -24,11 +27,26 @@ struct player* player_init(int bombs) {
 		error("Memory error");
 
 	player->direction = NORTH;
-	player->bombs = bombs;
-
+	player->bombs = bombs;	 //nb of bomb already put
+	player->max_bomb = bombs;
+	player->life=3;
 	return player;
 }
 
+int player_get_life(struct player *player){
+	assert(player);
+	return player->life;
+}
+
+void player_inc_life(struct player* player) {
+	assert(player);
+	player->life +=1;
+}
+
+void player_dec_life(struct player *player){
+	assert(player);
+	player->life -=1;
+}
 
 void player_set_position(struct player *player, int x, int y) {
 	assert(player);
@@ -36,6 +54,10 @@ void player_set_position(struct player *player, int x, int y) {
 	player->y = y;
 }
 
+void player_set_range(struct player *player, int range){
+	assert(player);
+	player->range =range;
+}
 
 void player_free(struct player* player) {
 	assert(player);
@@ -51,6 +73,12 @@ int player_get_y(struct player* player) {
 	assert(player != NULL);
 	return player->y;
 }
+
+int player_get_range(struct player* player){
+	assert(player != NULL);
+	return player->range;
+}
+
 
 void player_set_current_way(struct player* player, enum direction way) {
 	assert(player);
@@ -70,6 +98,31 @@ void player_inc_nb_bomb(struct player* player) {
 void player_dec_nb_bomb(struct player* player) {
 	assert(player);
 	player->bombs -= 1;
+}
+
+int  player_get_max_bomb(struct player * player){
+		assert(player);
+		return player->max_bomb;
+}
+
+void player_inc_max_bomb(struct player* player) {
+	assert(player);
+	player->max_bomb += 1;
+}
+
+void player_dec_max_bomb(struct player* player) {
+	assert(player);
+	player->max_bomb -= 1;
+}
+
+void player_inc_range(struct player * player){
+	assert(player);
+	player->range += 1;
+}
+
+void player_dec_range(struct player * player){
+	assert(player);
+	player->range -= 1;
 }
 
 static int player_move_aux(struct player* player, struct map* map, int x, int y) {
@@ -93,6 +146,8 @@ static int player_move_aux(struct player* player, struct map* map, int x, int y)
 		break;
 
 	case CELL_BONUS:
+		cell_bonus_move(map,player,x,y);
+		map_set_cell_type(map,x,y,CELL_EMPTY);
 		break;
 
 	case CELL_MONSTER:

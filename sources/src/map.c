@@ -83,6 +83,18 @@ enum cell_type map_get_cell_type(struct map* map, int x, int y)
 	return map->grid[CELL(x,y)] & 0xf0;
 }
 
+enum bonus_type map_get_bonus_type(struct map* map, int x, int y){
+	assert(map && map_is_inside(map, x, y));
+	return map->grid[CELL(x,y)] & 0x0f;
+}
+
+void map_set_bonus_type(struct map* map, int x, int y, enum  bonus_type bonus) {
+		assert(map && map_is_inside(map, x, y));
+		unsigned char type = map->grid[CELL(x,y)];
+		type = (type & 0xf0);
+		map->grid[CELL(x,y)] = map->grid[CELL(x,y)] | bonus;
+}
+
 void map_set_cell_type(struct map* map, int x, int y, enum cell_type type)
 {
 	assert(map && map_is_inside(map, x, y));
@@ -102,12 +114,16 @@ void display_bonus(struct map* map, int x, int y, unsigned char type)
 		break;
 
 	case BONUS_BOMB_NB_DEC:
-		window_display_image(sprite_get_bonus(BONUS_BOMB_RANGE_DEC), x, y);
+		window_display_image(sprite_get_bonus(BONUS_BOMB_NB_DEC), x, y);
 		break;
 
 	case BONUS_BOMB_NB_INC:
 		window_display_image(sprite_get_bonus(BONUS_BOMB_NB_INC), x, y);
 		break;
+
+	case BONUS_LIFE:
+		window_display_image(sprite_get_bonus(BONUS_LIFE),x,y);
+	break;
 	}
 }
 
@@ -169,10 +185,10 @@ struct map* map_get_static(void)
 	struct map* map = map_new(STATIC_MAP_WIDTH, STATIC_MAP_HEIGHT);
 
 	unsigned char themap[STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT] = {
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,
+	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, 0x51 , 0x52, 0x53 , 0x54 , 0x55, 0x56, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,
 	  CELL_STONE, CELL_STONE, CELL_STONE, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
 	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
-	  CELL_BOX, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
+	  0x21, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
 	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
 	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_STONE, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
 	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY , CELL_EMPTY, CELL_EMPTY, CELL_STONE,  CELL_EMPTY, CELL_EMPTY,
