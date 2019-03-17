@@ -58,13 +58,21 @@ void cell_bonus_move(struct map* map,struct player *player,int x,int y){
     break;
 
     case BONUS_BOMB_NB_DEC:
-      if(player_get_max_bomb(player)>1)
+      if(player_get_max_bomb(player)>1){
         player_dec_max_bomb(player);
-      if(player_get_nb_bomb(player)>0)
-        player_dec_nb_bomb(player);
+        if(player_get_nb_bomb(player)>player_get_max_bomb(player)){
+          // si au moins une bomb a ete posé
+          if (player_get_nb_bomb(player)>0)
+            player_dec_nb_bomb(player);
+
+          }
+      }
     break;
 
     case BONUS_LIFE:
+      if (player_get_life(player)<9) {
+        player_inc_life(player);
+      }
     break;
 
     case BONUS_MONSTER:
