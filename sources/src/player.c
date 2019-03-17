@@ -13,6 +13,7 @@
 #include <myfonct.h>
 
 struct player {
+	int life;
 	int x, y;
 	enum direction direction;
 	int bombs;
@@ -28,9 +29,24 @@ struct player* player_init(int bombs) {
 	player->direction = NORTH;
 	player->bombs = bombs;	 //nb of bomb already put
 	player->max_bomb = bombs;
+	player->life=3;
 	return player;
 }
 
+int player_get_life(struct player *player){
+	assert(player);
+	return player->life;
+}
+
+void player_inc_life(struct player* player) {
+	assert(player);
+	player->life +=1;
+}
+
+void player_dec_life(struct player *player){
+	assert(player);
+	player->life -=1;
+}
 
 void player_set_position(struct player *player, int x, int y) {
 	assert(player);

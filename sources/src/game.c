@@ -74,7 +74,8 @@ void game_banner_display(struct game* game) {
 	window_display_image(sprite_get_banner_life(), x, y);
 
 	x = white_bloc + SIZE_BLOC;
-	window_display_image(sprite_get_number(7), x, y);
+	window_display_image(
+		sprite_get_number(player_get_life(game_get_player(game))), x, y);
 
 	x = 2 * white_bloc + 2 * SIZE_BLOC;
 	window_display_image(sprite_get_banner_bomb(), x, y);

@@ -35,6 +35,11 @@ int  player_get_nb_bomb(struct player * player);
 void player_inc_nb_bomb(struct player * player);
 void player_dec_nb_bomb(struct player * player);
 
+// Set, Increase, Decrease life of the player
+int  player_get_life(struct player * player);
+void player_inc_life(struct player * player);
+void player_dec_life(struct player * player);
+
 // Increase, Decrease the range
 void player_inc_range(struct player * player);
 void player_dec_range(struct player * player);
