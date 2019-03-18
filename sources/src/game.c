@@ -96,7 +96,7 @@ void game_banner_display(struct game* game) {
 
 void game_display(struct game* game) {
 	assert(game);
-
+	player_update_state(game_get_current_map(game),game->player);
 	window_clear();
 	game_banner_display(game);
 	monster_display(game->monster);
