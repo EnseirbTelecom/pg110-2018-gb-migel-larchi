@@ -141,6 +141,8 @@ int bomb_explosion_map_set_cell_2(struct map *map,int x,int y) {
         break;
 
       case CELL_BONUS:
+        map_set_cell_type(map,x,y,CELL_EXPLOSION);
+        return 1;
         break;
 
       case CELL_MONSTER:

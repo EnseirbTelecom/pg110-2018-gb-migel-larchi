@@ -16,7 +16,7 @@ struct player {
 	int life;
 	int x, y;
 	enum direction direction;
-	int bombs;
+	int bombs; //nb of bomb already put
 	int max_bomb;
 	int  range;
 };
@@ -27,7 +27,7 @@ struct player* player_init(int bombs) {
 		error("Memory error");
 
 	player->direction = NORTH;
-	player->bombs = bombs;	 //nb of bomb already put
+	player->bombs = bombs;
 	player->max_bomb = bombs;
 	player->life=3;
 	return player;
@@ -197,6 +197,7 @@ int player_move(struct player* player, struct map* map) {
 	}
 
 	if (move && (map_get_cell_type(map,x,y)!=CELL_BOMB) ) {
+		//apres pose de la bomb puis deplacement la bombe ne disparait pas
 		map_set_cell_type(map, x, y, CELL_EMPTY);
 	}
 	return move;
