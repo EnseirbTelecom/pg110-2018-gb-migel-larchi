@@ -198,7 +198,8 @@ int player_move(struct player* player, struct map* map) {
 		break;
 	}
 
-	if (move && (map_get_cell_type(map,x,y)!=CELL_BOMB) ) {
+	if (move && (map_get_cell_type(map,x,y)!=CELL_BOMB)
+					&& map_get_cell_type(map,x,y)!=CELL_EXPLOSION) {
 		//apres pose de la bomb puis deplacement la bombe ne disparait pas
 		map_set_cell_type(map, x, y, CELL_EMPTY);
 	}
@@ -216,6 +217,7 @@ void player_update_state(struct map *map,struct player* player) {
 		switch (cell_type) {
 			case CELL_MONSTER:
 				player_dec_life(player);
+
 				player->state=SDL_GetTicks();
 
 			break;
