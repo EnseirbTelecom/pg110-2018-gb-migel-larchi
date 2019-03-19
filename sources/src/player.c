@@ -16,9 +16,10 @@ struct player {
 	int life;
 	int x, y;
 	enum direction direction;
-	int bombs; //nb of bomb already put
+	int bombs; //nb of bomb that player can put right now
 	int max_bomb;
 	int  range;
+	int state; // state=>0 => player est invulneratble
 };
 
 struct player* player_init(int bombs) {
@@ -30,6 +31,7 @@ struct player* player_init(int bombs) {
 	player->bombs = bombs;
 	player->max_bomb = bombs;
 	player->life=3;
+	player->state=-1;
 	return player;
 }
 
@@ -196,11 +198,40 @@ int player_move(struct player* player, struct map* map) {
 		break;
 	}
 
-	if (move && (map_get_cell_type(map,x,y)!=CELL_BOMB) ) {
+	if (move && (map_get_cell_type(map,x,y)!=CELL_BOMB)
+					&& map_get_cell_type(map,x,y)!=CELL_EXPLOSION) {
 		//apres pose de la bomb puis deplacement la bombe ne disparait pas
 		map_set_cell_type(map, x, y, CELL_EMPTY);
 	}
 	return move;
+}
+
+void player_update_state(struct map *map,struct player* player) {
+
+	int x=player->x;
+	int y=player->y;
+	int state=player->state;
+	enum cell_type cell_type=map_get_cell_type(map,x,y);
+
+	if (state < 0) {
+		switch (cell_type) {
+			case CELL_MONSTER:
+				player_dec_life(player);
+
+				player->state=SDL_GetTicks();
+
+			break;
+
+			case CELL_EXPLOSION:
+				player_dec_life(player);
+				player->state=SDL_GetTicks();
+			default:
+			break;
+		}
+	}else{
+		if((SDL_GetTicks()-state)>1000)
+			player->state=-1;
+	}
 }
 
 void player_display(struct player* player) {
