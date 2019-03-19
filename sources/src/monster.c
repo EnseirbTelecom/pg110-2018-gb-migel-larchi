@@ -120,7 +120,7 @@ int monster_move(struct monster* monster, struct map* map) {
 	case EAST:
 		if (monster_move_aux(monster, map, x + 1, y)) {
 			monster->x++;
-      map_set_cell_type(map,x-1,y,CELL_MONSTER);
+      map_set_cell_type(map,x+1,y,CELL_MONSTER);
 			move = 1;
 		}
 		break;
