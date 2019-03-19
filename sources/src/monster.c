@@ -7,11 +7,9 @@
 #include <misc.h>
 #include <constant.h>
 #include <myfonct.h>
-#include <time.h>
 
 struct monster{
   int x,y;
-  unsigned int lastTime;
   enum direction direction;
 };
 
@@ -22,7 +20,6 @@ struct monster* monster_init() {
   monster->x=3;
   monster->y=3;
   monster->direction = SOUTH;
-  monster->lastTime=SDL_GetTicks();
 	return monster;
 }
 
@@ -83,7 +80,7 @@ static int monster_move_aux(struct monster* monster, struct map* map, int x, int
 		break;
 	}
 
-	// Monster has moved
+	// Player has moved
 	return 1;
 }
 
@@ -136,40 +133,4 @@ void monster_display(struct monster* monster) {
 	assert(monster);
 	window_display_image(sprite_get_monster(monster->direction),
 			monster->x * SIZE_BLOC, monster->y * SIZE_BLOC);
-}
-
-void monster_set(struct monster* monster, struct map* map, unsigned int speed) {
-  unsigned int lastTime=monster->lastTime;
-  unsigned int  currentTime;
-  currentTime = SDL_GetTicks();
-  printf("lastTime : %d\n",lastTime);
-  printf("currentTime : %d\n",currentTime);
-  if (currentTime > (lastTime + speed)) {
-    printf("okok\n");
-    move_monster(monster,map);
-    monster->lastTime = currentTime;
-  }
-}
-
-void move_monster(struct monster* monster, struct map* map) {
-  	int random_number = rand();
-    int random_move = random_number%4 ;
-    switch (random_move) {
-      case 0:
-        monster_set_current_way(monster, NORTH);
-        monster_move(monster, map);
-        break;
-      case 1:
-        monster_set_current_way(monster, SOUTH);
-        monster_move(monster, map);
-        break;
-      case 2:
-        monster_set_current_way(monster, EAST);
-        monster_move(monster, map);
-        break;
-      case 3:
-        monster_set_current_way(monster, WEST);
-        monster_move(monster, map);
-        break;
-      }
 }
