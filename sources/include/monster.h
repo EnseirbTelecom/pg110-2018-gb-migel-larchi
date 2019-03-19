@@ -24,4 +24,6 @@ int monster_move(struct monster* monster, struct map* map);
 
 // Display the monster on the screen
 void monster_display(struct monster* monster);
+void monster_set(struct monster* monster, struct map* map, unsigned int speed);
+void move_monster(struct monster* monster, struct map* map);
 #endif
