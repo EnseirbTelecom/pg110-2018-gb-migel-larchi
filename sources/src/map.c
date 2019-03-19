@@ -9,6 +9,7 @@
 #include <time.h>
 
 #include <map.h>
+#include <map_init_txt.h>
 #include <constant.h>
 #include <misc.h>
 #include <sprite.h>
@@ -153,7 +154,32 @@ void map_display(struct map* map)
 
 	    unsigned char type = map->grid[CELL(i,j)];
 
-	    switch (type & 0xf0) {
+	    switch (type & 0xf0) {int main(int argc, char const *argv[]) {
+  FILE* fichier =NULL;
+  fichier = fopen("map_0.txt","r");
+
+  if (fichier == NULL){
+    printf("fichier == NULL\n");
+    return 0;
+  }
+
+  int car=fgetc(fichier);
+
+  printf("%c\n",car );
+  fgetc(fichier);
+  car=fgetc(fichier);
+  printf("%c\n",car );
+
+  car=fgetc(fichier);
+  while (car != EOF) {
+    printf("%c",car);
+    car = fgetc(fichier);
+  }
+
+  fclose(fichier);
+  return 0;
+}
+
 		case CELL_SCENERY:
 		  display_scenery(map, x, y, type);
 		  break;
@@ -201,6 +227,6 @@ struct map* map_get_static(void)
 
 	for (int i = 0; i < STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT; i++)
 		map->grid[i] = themap[i];
-
+		map_init_txt();
 	return map;
 }
