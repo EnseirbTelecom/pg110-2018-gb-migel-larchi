@@ -34,6 +34,10 @@ game_new(void) {
 	game->player = player_init(3);
 	game->monster= monster_init();
 
+
+	// Set move of monster
+	//monster_set(game->monster,game,1000);
+
 	// Set default location of the player
 	player_set_position(game->player, 1, 0);
 
@@ -96,7 +100,7 @@ void game_banner_display(struct game* game) {
 
 void game_display(struct game* game) {
 	assert(game);
-
+	monster_set(game->monster, game_get_current_map(game),1000);
 	window_clear();
 	game_banner_display(game);
 	monster_display(game->monster);
