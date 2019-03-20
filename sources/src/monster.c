@@ -1,6 +1,7 @@
 #include <SDL/SDL_image.h>
 #include <assert.h>
 
+#include <monster.h>
 #include <player.h>
 #include <sprite.h>
 #include <window.h>
@@ -53,9 +54,6 @@ void monster_set_current_way(struct monster* monster, enum direction way) {
 }
 
 static int monster_move_aux(struct monster* monster, struct map* map, int x, int y) {
-	enum direction direction;
-	direction=monster->direction;
-
 	if (!map_is_inside(map, x, y))
 		return 0;
 
@@ -77,6 +75,10 @@ static int monster_move_aux(struct monster* monster, struct map* map, int x, int
 		break;
 
 	case CELL_MONSTER:
+		break;
+
+	case CELL_DOOR:
+    return 0;
 		break;
 
 	default:
@@ -142,10 +144,7 @@ void monster_set(struct monster* monster, struct map* map, unsigned int speed) {
   unsigned int lastTime=monster->lastTime;
   unsigned int  currentTime;
   currentTime = SDL_GetTicks();
-  printf("lastTime : %d\n",lastTime);
-  printf("currentTime : %d\n",currentTime);
   if (currentTime > (lastTime + speed)) {
-    printf("okok\n");
     move_monster(monster,map);
     monster->lastTime = currentTime;
   }
