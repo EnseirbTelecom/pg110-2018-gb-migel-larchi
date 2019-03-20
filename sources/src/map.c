@@ -182,8 +182,8 @@ void map_display(struct map* map)
 }
 
 struct map* map_get_static(void)
-{
-/*	struct map* map = map_new(STATIC_MAP_WIDTH, STATIC_MAP_HEIGHT);
+{/*
+	struct map* map = map_new(STATIC_MAP_WIDTH, STATIC_MAP_HEIGHT);
 
 	unsigned char themap[STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT] = {
 	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, 0x51 , 0x52, 0x53 , 0x54 , 0x55, 0x56, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,
@@ -200,12 +200,24 @@ struct map* map_get_static(void)
 	  CELL_BOX,  CELL_EMPTY, CELL_DOOR, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,
 		};
 
-	for (int i = 0; i < STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT; i++)
-		map->grid[i] = themap[i]; */
+	for (int i = 0; i < STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT; i++){
+		map->grid[i] = themap[i];
 
-	int width,height;
-	map_init_txt(&width,&height);
-	unsigned char themap[width,height]=map_init_txt(&width,&height);
+		printf("%x ",themap[i] );
+		if (((i+1)%STATIC_MAP_WIDTH)==0) {
+			printf("\n");
+		}
+	}
+*/
+
+	int width = map_init_txt_get_width();
+	int height  = map_init_txt_get_height();
+
+	unsigned char *themap = map_init_txt(width,height);
 	struct map* map = map_new(width, height);
+
+	for (int i = 0; i < width * height; i++)
+		map->grid[i] = themap[i];
+
 	return map;
 }
