@@ -9,7 +9,7 @@
 #include <time.h>
 
 #include <map.h>
-#include <map_init_txt.h>
+#include <map_init.h>
 #include <constant.h>
 #include <misc.h>
 #include <sprite.h>
@@ -154,53 +154,28 @@ void map_display(struct map* map)
 
 	    unsigned char type = map->grid[CELL(i,j)];
 
-	    switch (type & 0xf0) {int main(int argc, char const *argv[]) {
-  FILE* fichier =NULL;
-  fichier = fopen("map_0.txt","r");
-
-  if (fichier == NULL){
-    printf("fichier == NULL\n");
-    return 0;
-  }
-
-  int car=fgetc(fichier);
-
-  printf("%c\n",car );
-  fgetc(fichier);
-  car=fgetc(fichier);
-  printf("%c\n",car );
-
-  car=fgetc(fichier);
-  while (car != EOF) {
-    printf("%c",car);
-    car = fgetc(fichier);
-  }
-
-  fclose(fichier);
-  return 0;
-}
-
-		case CELL_SCENERY:
-		  display_scenery(map, x, y, type);
-		  break;
-	    case CELL_BOX:
-	      window_display_image(sprite_get_box(), x, y);
-	      break;
-	    case CELL_BONUS:
-	      display_bonus(map, x, y, type);
-	      break;
-	    case CELL_KEY:
-	      window_display_image(sprite_get_key(), x, y);
-	      break;
-	    case CELL_DOOR:
-	      // pas de gestion du type de porte
-	      window_display_image(sprite_get_door_opened(), x, y);
-	      break;
-			case CELL_BOMB:
-				break;
-			case CELL_EXPLOSION:
-				window_display_image(sprite_get_bomb(0),x,y);
-				break;
+	    switch (type & 0xf0) {
+				case CELL_SCENERY:
+			  display_scenery(map, x, y, type);
+			  break;
+		    case CELL_BOX:
+		      window_display_image(sprite_get_box(), x, y);
+		      break;
+		    case CELL_BONUS:
+		      display_bonus(map, x, y, type);
+		      break;
+		    case CELL_KEY:
+		      window_display_image(sprite_get_key(), x, y);
+		      break;
+		    case CELL_DOOR:
+		      // pas de gestion du type de porte
+		      window_display_image(sprite_get_door_opened(), x, y);
+		      break;
+				case CELL_BOMB:
+					break;
+				case CELL_EXPLOSION:
+					window_display_image(sprite_get_bomb(0),x,y);
+					break;
 	    }
 	  }
 	}
@@ -208,7 +183,7 @@ void map_display(struct map* map)
 
 struct map* map_get_static(void)
 {
-	struct map* map = map_new(STATIC_MAP_WIDTH, STATIC_MAP_HEIGHT);
+/*	struct map* map = map_new(STATIC_MAP_WIDTH, STATIC_MAP_HEIGHT);
 
 	unsigned char themap[STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT] = {
 	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, 0x51 , 0x52, 0x53 , 0x54 , 0x55, 0x56, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,
@@ -226,7 +201,11 @@ struct map* map_get_static(void)
 		};
 
 	for (int i = 0; i < STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT; i++)
-		map->grid[i] = themap[i];
-		map_init_txt();
+		map->grid[i] = themap[i]; */
+
+	int width,height;
+	map_init_txt(&width,&height);
+	unsigned char themap[width,height]=map_init_txt(&width,&height);
+	struct map* map = map_new(width, height);
 	return map;
 }

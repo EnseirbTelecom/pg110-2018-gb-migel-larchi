@@ -2,25 +2,22 @@
 #include <stdio.h>
 #include <assert.h>
 
-void map_init_txt(void){
+unsigned char map_init_txt(int* width,int* height ){
   FILE* fichier =NULL;
   fichier = fopen("map/map_0.txt","r");
   assert(fichier);
 
-  int width=fgetc(fichier);
-  fgetc(fichier);
-  int height=fgetc(fichier);
-  int car =fgetc(fichier);
+  fscanf(fichier,"%d :%d",width,height);
+  printf("%d %d\n",*width,*height);
 
-  unsigned char themap[width * height];
-
-  int nb_car = 0;
-  while (nb_car<(width*height)) {
-    nb_car_line++;
-    car=fgetc;
-    if(car!='' || car!='/n'){
-      themap[nb_car]=car;
-      printf("%d\n",car);
-    }
+  unsigned char themap[(*width)*(*height)];
+  for (int i = 0; i < (*width)*(*height); i++) {
+     fscanf(fichier,"%c",&themap[i]);
   }
+
+  for (size_t i = 0; i < (*width)*(*height); i++) {
+    printf("%d ",themap[i] );
+  }
+  printf("\n" );
+  return themap;
 }
