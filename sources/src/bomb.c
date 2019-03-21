@@ -308,7 +308,7 @@ void bomb_explosion_end(struct map *map,struct bomb* bomb){
     }
     if(map_is_inside(map,x_i,y) && (map_get_cell_type(map,x_i,y)==CELL_EXPLOSION
     || map_get_cell_type(map,x_i,y)==CELL_BOMB
-    || map_get_cell_type(map,x,yi)==CELL_EXPLOSION)){
+    || map_get_cell_type(map,x_i,y)==CELL_EXPLOSION)){
       enum bonus_type bonus_type=map_get_bonus_type(map,x_i,y);
       map_set_cell_type(map,x_i,y,CELL_BONUS);
       map_set_bonus_type(map,x_i,y,bonus_type);
