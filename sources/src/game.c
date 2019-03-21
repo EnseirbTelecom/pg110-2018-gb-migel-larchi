@@ -97,8 +97,6 @@ void game_banner_display(struct game* game) {
 
 void game_display(struct game* game) {
 	assert(game);
-	monster_list_update(game_get_current_map(game),game->monster_list);
-	player_update_state(game_get_current_map(game),game->player);
 	window_clear();
 	game_banner_display(game);
 	monster_list_display(game->monster_list);
@@ -155,6 +153,8 @@ static short input_keyboard(struct game* game) {
 }
 
 int game_update(struct game* game) {
+	monster_list_update(game_get_current_map(game),game->monster_list);
+	player_update_state(game_get_current_map(game),game->player);
 	if (input_keyboard(game))
 		return 1; // exit game
 
