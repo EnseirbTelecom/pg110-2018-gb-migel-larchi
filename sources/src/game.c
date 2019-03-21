@@ -18,7 +18,6 @@ struct game {
 	short level;
 	struct player* player;
 	struct bomb_list* bombs; //list of bombs
-	struct monster_list* monster_list;
 };
 
 struct game*
@@ -32,14 +31,12 @@ game_new(void) {
 	game->level = 0;
 	game->bombs=bomb_list_init();
 	game->player = player_init(3);
-	game->monster_list= monster_list_init();
 
 
 	// Set default location of the player
 	player_set_position(game->player, 1, 0);
 	// Set default range of the player
 	player_set_range(game->player, 1);
-	monster_init_map(game->maps[0],game->monster_list);
 	return game;
 }
 
@@ -99,7 +96,6 @@ void game_display(struct game* game) {
 	assert(game);
 	window_clear();
 	game_banner_display(game);
-	monster_list_display(game->monster_list);
 	bomb_list_display(game_get_current_map(game),&(game->bombs));
 	map_display(game_get_current_map(game));
 	player_display(game->player);
@@ -153,7 +149,6 @@ static short input_keyboard(struct game* game) {
 }
 
 int game_update(struct game* game) {
-	monster_list_update(game_get_current_map(game),game->monster_list);
 	player_update_state(game_get_current_map(game),game->player);
 	if (input_keyboard(game))
 		return 1; // exit game
