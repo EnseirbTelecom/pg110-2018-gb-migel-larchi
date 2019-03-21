@@ -20,8 +20,6 @@ struct monster* monster_init() {
 	struct monster* monster = malloc(sizeof(*monster));
 	if (!monster)
 		error("Memory error");
-  monster->x=3;
-  monster->y=3;
   monster->direction = SOUTH;
   monster->lastTime=SDL_GetTicks();
 	return monster;

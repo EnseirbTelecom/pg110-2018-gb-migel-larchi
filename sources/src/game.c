@@ -10,7 +10,7 @@
 #include <window.h>
 #include <sprite.h>
 #include <bomb_list.h>
-#include <monster.h>
+#include <monster_list.h>
 
 struct game {
 	struct map** maps;       // the game's map
@@ -18,7 +18,7 @@ struct game {
 	short level;
 	struct player* player;
 	struct bomb_list* bombs; //list of bombs
-	struct monster* monster;
+	struct monster_list* monster_list;
 };
 
 struct game*
@@ -32,17 +32,14 @@ game_new(void) {
 	game->level = 0;
 	game->bombs=bomb_list_init();
 	game->player = player_init(3);
-	game->monster= monster_init();
+	game->monster_list= monster_list_init();
 
-
-	// Set move of monster
-	//monster_set(game->monster,game,1000);
 
 	// Set default location of the player
 	player_set_position(game->player, 1, 0);
-
 	// Set default range of the player
 	player_set_range(game->player, 1);
+	monster_init_map(game->maps[0],game->monster_list);
 	return game;
 }
 
@@ -100,11 +97,11 @@ void game_banner_display(struct game* game) {
 
 void game_display(struct game* game) {
 	assert(game);
-	monster_set(game->monster, game_get_current_map(game),1000);
+	monster_list_update(game_get_current_map(game),game->monster_list);
 	player_update_state(game_get_current_map(game),game->player);
 	window_clear();
 	game_banner_display(game);
-	monster_display(game->monster);
+	monster_list_display(game->monster_list);
 	bomb_list_display(game_get_current_map(game),&(game->bombs));
 	map_display(game_get_current_map(game));
 	player_display(game->player);
