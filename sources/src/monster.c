@@ -126,7 +126,7 @@ int monster_move(struct monster* monster, struct map* map) {
 		break;
 	}
 
-	if (move) {
+	if (move && map_get_cell_type(map,x,y)==CELL_MONSTER) {
 		map_set_cell_type(map, x, y, CELL_EMPTY);
 	}
 	return move;

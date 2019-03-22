@@ -24,5 +24,5 @@ void monster_list_display(struct monster_list* monster_list);
 void monster_list_free(struct monster_list** monster_list);
 
 //return pointer of a monster on monster_list if x and y are given
-struct monster_list *monster_list_find_monster(struct monster_list *monster_list,int x,int y);
+int monster_list_del_monster(struct monster_list** monster_list,int x,int y);
 #endif

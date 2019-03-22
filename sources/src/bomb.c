@@ -8,6 +8,7 @@
 #include <sprite.h>
 #include <constant.h>
 #include  <map.h>
+#include <monster_list.h>
 
 struct bomb{
   int x,y;
@@ -84,7 +85,7 @@ void bomb_display(struct map *map,struct bomb *bomb){
 int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
     enum cell_type cell_type = map_get_cell_type(map,x,y);
     enum bonus_type bonus_type=map_get_bonus_type(map,x,y);
-
+    struct monster_list** monster_list=map_get_monster_list(map);
     switch (cell_type) {
       case CELL_EMPTY:
         map_set_cell_type(map,x,y,CELL_EXPLOSION);
@@ -101,6 +102,9 @@ int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
         break;
 
       case CELL_MONSTER:
+        monster_list_del_monster(monster_list,x,y);
+        map_set_cell_type(map,x,y,CELL_EXPLOSION);
+        return 1;
         break;
 
       case CELL_SCENERY:
@@ -146,6 +150,7 @@ int bomb_explosion_map_set_cell_2(struct map *map,int x,int y) {
         break;
 
       case CELL_MONSTER:
+
         break;
 
       case CELL_SCENERY:
