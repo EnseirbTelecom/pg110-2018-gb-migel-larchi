@@ -67,7 +67,6 @@ void monster_list_update(struct map *map, struct monster_list *monster_list) {
 
 void monster_list_display(struct monster_list* monster_list) {
   assert(monster_list);
-
   while (monster_list->monster!=NULL) {
     monster_display(monster_list->monster);
     monster_list=monster_list->next;
@@ -81,25 +80,36 @@ void monster_list_free(struct monster_list** monster_list){
   }
 };
 
-struct monster_list*
-monster_list_find_monster(struct monster_list *monster_list,int x,int y){
-  assert(monster_list);
 
-  struct monster *monster=monster_list->monster;
-  while (monster!=NULL) {
-    if( monster_get_x(monster)==x && monster_get_y(monster)==y ){
-      return monster_list;
-    }else{
-      monster_list=monster_list->next;
-      monster=monster_list->monster;
-    }
+int monster_list_del_monster(struct monster_list** monster_list,int x,int y) {
+  assert(monster_list);
+  assert(*monster_list);
+
+  struct monster_list *tmp_monster_list=*monster_list;
+  struct monster_list *prev;
+  struct monster *tmp_monster=tmp_monster_list->monster;
+
+  if(monster_get_x(tmp_monster)==x && monster_get_y(tmp_monster)==y){
+    (*monster_list)=(*monster_list)->next;
+    free(tmp_monster);
+    free(tmp_monster_list);
+    return 1;
   }
-  return NULL;
-}
 
-void monster_list_del_monster(struct monster_list** monster_list,int x,int y) {
-  assert(monster_list);
-  struct monster_list *todel_monster=monster_list_find_monster(*monster_list,x,y)
-  
+  while(tmp_monster_list!=NULL){
+    if(monster_get_x(tmp_monster)==x && monster_get_y(tmp_monster)==y)
+      break;
+    prev=tmp_monster_list;
+    tmp_monster_list=(tmp_monster_list->next);
+    tmp_monster=(tmp_monster_list->monster);
+  }
+
+  if(tmp_monster_list==NULL)
+   return 0;
+
+  prev->next=tmp_monster_list->next;
+  free(tmp_monster);
+  free(tmp_monster_list);
+  return 1;
 
 }
