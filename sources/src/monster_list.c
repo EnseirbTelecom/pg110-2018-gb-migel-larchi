@@ -81,7 +81,8 @@ void monster_list_free(struct monster_list** monster_list){
   }
 };
 
-struct monster_list *monster_list_find_monster(struct monster_list *monster_list,int x,int y){
+struct monster_list*
+monster_list_find_monster(struct monster_list *monster_list,int x,int y){
   assert(monster_list);
 
   struct monster *monster=monster_list->monster;
@@ -94,4 +95,11 @@ struct monster_list *monster_list_find_monster(struct monster_list *monster_list
     }
   }
   return NULL;
+}
+
+void monster_list_del_monster(struct monster_list** monster_list,int x,int y) {
+  assert(monster_list);
+  struct monster_list *todel_monster=monster_list_find_monster(*monster_list,x,y)
+  
+
 }
