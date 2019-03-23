@@ -73,6 +73,7 @@ static int monster_move_aux(struct monster* monster, struct map* map, int x, int
 		break;
 
 	case CELL_MONSTER:
+    return 0;
 		break;
 
 	case CELL_DOOR:
