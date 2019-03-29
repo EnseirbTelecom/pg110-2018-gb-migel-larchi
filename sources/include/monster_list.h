@@ -15,7 +15,7 @@ void monster_init_map(struct map *map,struct monster_list* monster_list);
 void monster_list_add(struct monster_list *monster_list,int x,int y);
 
 //update position and direction of each monster in monster_list
-void monster_list_update(struct map *map, struct monster_list *monster_list);
+void monster_list_update(struct map *map);
 
 //display moonster
 void monster_list_display(struct monster_list* monster_list);
@@ -23,6 +23,5 @@ void monster_list_display(struct monster_list* monster_list);
 //free monster_list
 void monster_list_free(struct monster_list** monster_list);
 
-//return pointer of a monster on monster_list if x and y are given
-int monster_list_del_monster(struct monster_list** monster_list,int x,int y);
+
 #endif

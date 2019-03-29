@@ -193,7 +193,6 @@ void map_display(struct map* map)
 	}
 //a modif
 	monster_list_display(map->monster_list);
-	monster_list_update(map,map->monster_list);
 }
 
 struct map* map_get_static(void)

@@ -46,6 +46,16 @@ int monster_get_y(struct monster* monster) {
 	return monster->y;
 }
 
+int monster_get_lastTime(struct monster* monster){
+    assert(monster);
+    return monster->lastTime;
+}
+
+void monster_death(struct monster* monster) {
+  assert(monster);
+  monster->lastTime=0;
+}
+
 void monster_set_current_way(struct monster* monster, enum direction way) {
 	assert(monster);
 	monster->direction = way;
@@ -58,30 +68,34 @@ static int monster_move_aux(struct monster* monster, struct map* map, int x, int
 	switch (map_get_cell_type(map, x, y)) {
 	case CELL_SCENERY:
 		return 0;		// Les mouvements du joueur sont limités les éléments de décors
-		break;
+	break;
 
 	case CELL_BOMB:
 		return 0;
-		break;
+	break;
 
 	case CELL_BOX:
 		return 0;
-		break;
+	break;
 
 	case CELL_BONUS:
     return 0;
-		break;
+	break;
 
 	case CELL_MONSTER:
     return 0;
-		break;
+	break;
 
 	case CELL_DOOR:
     return 0;
-		break;
+	break;
+
+  case CELL_EXPLOSION:
+    return 0;
+  break;
 
 	default:
-		break;
+	break;
 	}
 
 	// Monster has moved
@@ -97,7 +111,6 @@ int monster_move(struct monster* monster, struct map* map) {
 	case NORTH:
 		if (monster_move_aux(monster, map, x, y - 1)) {
 			monster->y--;
-      map_set_cell_type(map,x,y-1,CELL_MONSTER);
 			move = 1;
 		}
 		break;
@@ -105,7 +118,6 @@ int monster_move(struct monster* monster, struct map* map) {
 	case SOUTH:
 		if (monster_move_aux(monster, map, x, y + 1)) {
 			monster->y++;
-      map_set_cell_type(map,x,y+1,CELL_MONSTER);
 			move = 1;
 		}
 		break;
@@ -113,7 +125,6 @@ int monster_move(struct monster* monster, struct map* map) {
 	case WEST:
 		if (monster_move_aux(monster, map, x - 1, y)) {
 			monster->x--;
-      map_set_cell_type(map,x-1,y,CELL_MONSTER);
 			move = 1;
 		}
 		break;
@@ -121,15 +132,17 @@ int monster_move(struct monster* monster, struct map* map) {
 	case EAST:
 		if (monster_move_aux(monster, map, x + 1, y)) {
 			monster->x++;
-      map_set_cell_type(map,x+1,y,CELL_MONSTER);
 			move = 1;
 		}
 		break;
 	}
-
-	if (move && map_get_cell_type(map,x,y)==CELL_MONSTER) {
+	if (move && map_get_cell_type(map,x,y)==CELL_MONSTER)
 		map_set_cell_type(map, x, y, CELL_EMPTY);
-	}
+
+  x = monster_get_x(monster);
+  y = monster_get_y(monster);
+  if(map_get_cell_type(map,x,y)!=CELL_EXPLOSION)
+    map_set_cell_type(map,x,y,CELL_MONSTER);
 	return move;
 }
 
@@ -139,17 +152,22 @@ void monster_display(struct monster* monster) {
 			monster->x * SIZE_BLOC, monster->y * SIZE_BLOC);
 }
 
-void monster_set(struct monster* monster, struct map* map, unsigned int speed) {
+void monster_update(struct monster* monster, struct map* map, unsigned int speed) {
   unsigned int lastTime=monster->lastTime;
   unsigned int  currentTime;
   currentTime = SDL_GetTicks();
   if (currentTime > (lastTime + speed)) {
-    move_monster(monster,map);
     monster->lastTime = currentTime;
+    monster_new_pos(monster,map);
+  }
+  int x=monster_get_x(monster);
+  int y=monster_get_y(monster);
+  if (map_get_cell_type(map,x,y)==CELL_EXPLOSION) {
+    monster_death(monster);
   }
 }
 
-void move_monster(struct monster* monster, struct map* map) {
+void monster_new_pos(struct monster* monster, struct map* map) {
   	int random_number = rand();
     int random_move = random_number%4 ;
     switch (random_move) {

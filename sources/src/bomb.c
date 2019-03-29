@@ -102,7 +102,6 @@ int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
         break;
 
       case CELL_MONSTER:
-        monster_list_del_monster(monster_list,x,y);
         map_set_cell_type(map,x,y,CELL_EXPLOSION);
         return 1;
         break;

@@ -55,11 +55,18 @@ void monster_list_add(struct monster_list *monster_list,int x,int y) {
   monster_list->next=monster_list_init();
 }
 
-void monster_list_update(struct map *map, struct monster_list *monster_list) {
-  assert(monster_list);
+void monster_list_update(struct map *map) {
+  assert(map);
+  struct monster_list** pmonster_list=map_get_monster_list(map);
+  struct monster_list* monster_list=*pmonster_list;
 
   while (monster_list->monster!=NULL) {
-    monster_set(monster_list->monster,map,1000);
+    monster_update(monster_list->monster,map,1000);
+    if (monster_get_lastTime(monster_list->monster)==0) {
+      int x = monster_get_x(monster_list->monster);
+      int y = monster_get_y(monster_list->monster);
+      monster_list_del_monster(pmonster_list,x,y);
+    }
     monster_list=monster_list->next;
 
   }
