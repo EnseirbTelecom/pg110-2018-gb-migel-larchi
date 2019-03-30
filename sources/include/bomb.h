@@ -27,3 +27,5 @@ int bomb_get_state(struct bomb* bomb);
 void bomb_explosion_map_set(struct map* map,struct bomb* bomb);
 
 int bomb_explosion_map_set_cell(struct map* map,int x,int y);
+
+void bomb_update(struct map* map,struct bomb* bomb);

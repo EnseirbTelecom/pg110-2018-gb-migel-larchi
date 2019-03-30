@@ -71,21 +71,28 @@ void bomb_display(struct map *map,struct bomb *bomb){
   int x=bomb->x;
   int y=bomb->y;
   int state=bomb_get_state(bomb);
-  if(state==0 && (bomb->exploded)==0){
-    bomb_explosion_map_set(map,bomb);
-    bomb->exploded=1;
-  }else if (state==0 && (bomb->exploded)==2) {
-    bomb_explosion_map_set(map,bomb);
-    bomb->exploded=1;
-  }
   window_display_image(sprite_get_bomb(state),x* SIZE_BLOC,y* SIZE_BLOC);
 };
 
+void bomb_update(struct map* map,struct bomb* bomb){
+  assert(map);
+  assert(bomb);
+
+  int state = bomb_get_state(bomb);
+  if(state==0 && (bomb->exploded)==0){
+    //si la bombe vient exploser
+    bomb_explosion_map_set(map,bomb);
+    bomb->exploded=1;
+  }else if (state == 0 && (bomb->exploded)==2) {
+    //si une bombe a exploser, on rafraichie les explosion
+    bomb_explosion_map_set(map,bomb);
+  }
+}
 
 int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
     enum cell_type cell_type = map_get_cell_type(map,x,y);
     enum bonus_type bonus_type=map_get_bonus_type(map,x,y);
-    struct monster_list** monster_list=map_get_monster_list(map);
+    
     switch (cell_type) {
       case CELL_EMPTY:
         map_set_cell_type(map,x,y,CELL_EXPLOSION);
