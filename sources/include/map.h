@@ -6,15 +6,15 @@
 #define MAP_H_
 
 enum cell_type {
-	CELL_EMPTY=0x00,   		//  0000 0000
-	CELL_SCENERY=0x10, 		//  0001 0000
-	CELL_BOX=0x20,   		//  0010 0000
-	CELL_DOOR=0x30,      	//  0011 0000
-	CELL_KEY=0x40,       	//  0100 0000
-	CELL_BONUS=0x50, 		// 	0101 0000
-	CELL_MONSTER=0x60, 		// 	0110 0000
-	CELL_BOMB=0x70, 	   		// 	0111 0000
-	CELL_EXPLOSION=0x80, 	   		// 	1000 0000
+	CELL_EMPTY=0x00,   		//  0000 0000 				0
+	CELL_SCENERY=0x10, 		//  0001 0000 				16
+	CELL_BOX=0x20,   		//  0010 0000 					32
+	CELL_DOOR=0x30,      	//  0011 0000 				48
+	CELL_KEY=0x40,       	//  0100 0000 				64
+	CELL_BONUS=0x50, 		// 	0101 0000 					80
+	CELL_MONSTER=0x60, 		// 	0110 0000					96
+	CELL_BOMB=0x70, 	   		// 	0111 0000				112
+	CELL_EXPLOSION=0x80, 	   		// 	1000 0000	  128
 
 };
 
@@ -72,10 +72,10 @@ void  map_set_cell_type(struct map* map, int x, int y, enum cell_type type);
 // Test if (x,y) is within the map
 int map_is_inside(struct map* map, int x, int y);
 
-// Return a default static map
-struct map* map_get_static();
-
 // Display the map on the screen
 void map_display(struct map* map);
+
+// laod map from file
+struct map* map_load_map(char* dir);
 
 #endif /* MAP_H_ */

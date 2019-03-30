@@ -9,7 +9,7 @@
 #include <time.h>
 
 #include <map.h>
-#include <map_init.h>
+#include <map_file.h>
 #include <constant.h>
 #include <misc.h>
 #include <sprite.h>
@@ -181,43 +181,16 @@ void map_display(struct map* map)
 	}
 }
 
-struct map* map_get_static(void)
-{/*
-	struct map* map = map_new(STATIC_MAP_WIDTH, STATIC_MAP_HEIGHT);
+struct map* map_load_map(char* dir) {
+  int width = map_file_get_width(dir);
+  int height  = map_file_get_height(dir);
 
-	unsigned char themap[STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT] = {
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, 0x51 , 0x52, 0x53 , 0x54 , 0x55, 0x56, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,
-	  CELL_STONE, CELL_STONE, CELL_STONE, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
-	  0x21, CELL_EMPTY, CELL_EMPTY, CELL_MONSTER, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_STONE, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY , CELL_EMPTY, CELL_EMPTY, CELL_STONE,  CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_TREE, CELL_BOX, CELL_TREE, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,  CELL_EMPTY, CELL_STONE,  CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_TREE, CELL_TREE, CELL_TREE, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,  CELL_STONE,  CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE,  CELL_EMPTY, CELL_EMPTY,
-	  CELL_BOX, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE,  CELL_BOX_LIFE, CELL_EMPTY,
-	  CELL_BOX,  CELL_EMPTY, CELL_DOOR, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,
-		};
+  unsigned char *themap = map_file_read(dir,width,height);
+  struct map* map = map_new(width, height);
 
-	for (int i = 0; i < STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT; i++){
-		map->grid[i] = themap[i];
+  for (int i = 0; i < width * height; i++)
+    map->grid[i] = themap[i];
 
-		printf("%x ",themap[i] );
-		if (((i+1)%STATIC_MAP_WIDTH)==0) {
-			printf("\n");
-		}
-	}
-*/
-
-	int width = map_init_txt_get_width();
-	int height  = map_init_txt_get_height();
-
-	unsigned char *themap = map_init_txt(width,height);
-	struct map* map = map_new(width, height);
-
-	for (int i = 0; i < width * height; i++)
-		map->grid[i] = themap[i];
-
-	return map;
+  free(themap);
+  return map;
 }
