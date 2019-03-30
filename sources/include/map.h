@@ -78,4 +78,8 @@ void map_display(struct map* map);
 // laod map from file
 struct map* map_load_map(char* dir);
 
+// return the monster_list of the map
+struct monster_list** map_get_monster_list(struct map* map);
+
+
 #endif /* MAP_H_ */

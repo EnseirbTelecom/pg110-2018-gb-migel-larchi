@@ -14,11 +14,14 @@
 #include <misc.h>
 #include <sprite.h>
 #include <window.h>
+#include <monster_list.h>
 
 struct map {
 	int width;
 	int height;
 	unsigned char* grid;
+	struct monster_list* monster_list;
+
 };
 
 #define CELL(i,j) ( (i) + (j) * map->width)
@@ -76,6 +79,12 @@ int map_get_height(struct map* map)
 {
 	assert(map);
 	return map->height;
+}
+
+struct monster_list** map_get_monster_list(struct map* map){
+	assert(map);
+	assert(map->monster_list);
+	return &(map->monster_list);
 }
 
 enum cell_type map_get_cell_type(struct map* map, int x, int y)
@@ -155,35 +164,43 @@ void map_display(struct map* map)
 	    unsigned char type = map->grid[CELL(i,j)];
 
 	    switch (type & 0xf0) {
-				case CELL_SCENERY:
-			  display_scenery(map, x, y, type);
-			  break;
-		    case CELL_BOX:
-		      window_display_image(sprite_get_box(), x, y);
-		      break;
-		    case CELL_BONUS:
-		      display_bonus(map, x, y, type);
-		      break;
-		    case CELL_KEY:
-		      window_display_image(sprite_get_key(), x, y);
-		      break;
-		    case CELL_DOOR:
-		      // pas de gestion du type de porte
-		      window_display_image(sprite_get_door_opened(), x, y);
-		      break;
-				case CELL_BOMB:
-					break;
-				case CELL_EXPLOSION:
-					window_display_image(sprite_get_bomb(0),x,y);
-					break;
+
+	  	case CELL_SCENERY:
+		  display_scenery(map, x, y, type);
+		  break;
+	    case CELL_BOX:
+	      window_display_image(sprite_get_box(), x, y);
+	      break;
+	    case CELL_BONUS:
+				if (map_get_bonus_type(map,i,j)==BONUS_MONSTER){
+					monster_list_add(map->monster_list,i,j);
+					map_set_cell_type(map,i,j,CELL_MONSTER);
+				}
+	      display_bonus(map, x, y, type);
+	      break;
+	    case CELL_KEY:
+	      window_display_image(sprite_get_key(), x, y);
+	      break;
+	    case CELL_DOOR:
+	      // pas de gestion du type de porte
+	      window_display_image(sprite_get_door_opened(), x, y);
+	      break;
+			case CELL_BOMB:
+				break;
+			case CELL_EXPLOSION:
+				window_display_image(sprite_get_bomb(0),x,y);
+				break;
 	    }
 	  }
 	}
+//a modif
+	monster_list_display(map->monster_list);
 }
 
 struct map* map_load_map(char* dir) {
   int width = map_file_get_width(dir);
   int height  = map_file_get_height(dir);
+
 
   unsigned char *themap = map_file_read(dir,width,height);
   struct map* map = map_new(width, height);

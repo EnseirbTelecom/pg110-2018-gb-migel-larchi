@@ -12,6 +12,8 @@
 #include <bomb_list.h>
 #include <monster.h>
 #include <map_file.h>
+#include <monster_list.h>
+
 
 struct game {
 	struct map** maps;       // the game's map
@@ -19,7 +21,6 @@ struct game {
 	short level;
 	struct player* player;
 	struct bomb_list* bombs; //list of bombs
-	struct monster* monster;
 };
 
 struct game*
@@ -33,11 +34,10 @@ game_new(void) {
 	game->level = 0;
 	game->bombs=bomb_list_init();
 	game->player = player_init(3);
-	game->monster= monster_init();
+
 
 	// Set default location of the player
 	player_set_position(game->player, 1, 0);
-
 	// Set default range of the player
 	player_set_range(game->player, 1);
 	return game;
@@ -97,11 +97,9 @@ void game_banner_display(struct game* game) {
 
 void game_display(struct game* game) {
 	assert(game);
-	player_update_state(game_get_current_map(game),game->player);
 	window_clear();
 	game_banner_display(game);
-	monster_display(game->monster);
-	bomb_list_display(game_get_current_map(game),&(game->bombs));
+	bomb_list_display(game_get_current_map(game),game->bombs);
 	map_display(game_get_current_map(game));
 	player_display(game->player);
 	window_refresh();
@@ -154,6 +152,11 @@ static short input_keyboard(struct game* game) {
 }
 
 int game_update(struct game* game) {
+	struct map* map=game_get_current_map(game);
+	player_update_state(map,game->player);
+	bomb_list_update(map,&(game->bombs));
+	monster_list_update(map);
+
 	if (input_keyboard(game))
 		return 1; // exit game
 
