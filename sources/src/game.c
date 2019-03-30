@@ -149,9 +149,9 @@ static short input_keyboard(struct game* game) {
 }
 
 int game_update(struct game* game) {
-	struct map* currentmap=game_get_current_map(game);
-	player_update_state(currentmap,game->player);
-	monster_list_update(currentmap);
+	struct map* map=game_get_current_map(game);
+	player_update_state(map,game->player);
+	monster_list_update(map);
 
 	if (input_keyboard(game))
 		return 1; // exit game
