@@ -9,6 +9,7 @@
 #include <time.h>
 
 #include <map.h>
+#include <map_file.h>
 #include <constant.h>
 #include <misc.h>
 #include <sprite.h>
@@ -163,7 +164,8 @@ void map_display(struct map* map)
 	    unsigned char type = map->grid[CELL(i,j)];
 
 	    switch (type & 0xf0) {
-		case CELL_SCENERY:
+
+	  	case CELL_SCENERY:
 		  display_scenery(map, x, y, type);
 		  break;
 	    case CELL_BOX:
@@ -195,30 +197,17 @@ void map_display(struct map* map)
 	monster_list_display(map->monster_list);
 }
 
-struct map* map_get_static(void)
-{
-	struct map* map = map_new(STATIC_MAP_WIDTH, STATIC_MAP_HEIGHT);
+struct map* map_load_map(char* dir) {
+  int width = map_file_get_width(dir);
+  int height  = map_file_get_height(dir);
 
-	unsigned char themap[STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT] = {
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY , 0x52, 0x53 , 0x54 , CELL_MONSTER, 0x56, CELL_EMPTY, CELL_EMPTY, CELL_MONSTER,
-	  CELL_STONE, CELL_STONE, CELL_STONE, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_EMPTY, CELL_MONSTER,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_MONSTER,
-	  0x25,0x24, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_BOX, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_STONE, CELL_STONE, CELL_EMPTY, CELL_EMPTY, CELL_STONE, CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY , CELL_EMPTY, CELL_EMPTY, CELL_STONE,  CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_TREE, CELL_BOX, CELL_TREE, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,  CELL_EMPTY, CELL_STONE,  CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_TREE, CELL_TREE, CELL_TREE, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,  CELL_STONE,  CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_STONE,  CELL_EMPTY, CELL_EMPTY,
-	  CELL_EMPTY, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE, CELL_STONE,  CELL_BOX_LIFE, CELL_EMPTY,
-		CELL_EMPTY,  CELL_EMPTY, CELL_DOOR, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY, CELL_EMPTY,
-		};
 
-	for (int i = 0; i < STATIC_MAP_WIDTH * STATIC_MAP_HEIGHT; i++)
-		map->grid[i] = themap[i];
-// a modif
-	map->monster_list= monster_list_init();
-	monster_init_map(map,map->monster_list);
+  unsigned char *themap = map_file_read(dir,width,height);
+  struct map* map = map_new(width, height);
 
-	return map;
+  for (int i = 0; i < width * height; i++)
+    map->grid[i] = themap[i];
+
+  free(themap);
+  return map;
 }

@@ -10,7 +10,10 @@
 #include <window.h>
 #include <sprite.h>
 #include <bomb_list.h>
+#include <monster.h>
+#include <map_file.h>
 #include <monster_list.h>
+
 
 struct game {
 	struct map** maps;       // the game's map
@@ -26,7 +29,7 @@ game_new(void) {
 
 	struct game* game = malloc(sizeof(*game));
 	game->maps = malloc(sizeof(struct game));
-	game->maps[0] = map_get_static();
+	game->maps = map_file_read_dir("./map","easy");
 	game->levels = 1;
 	game->level = 0;
 	game->bombs=bomb_list_init();
