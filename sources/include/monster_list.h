@@ -23,5 +23,6 @@ void monster_list_display(struct monster_list* monster_list);
 //free monster_list
 void monster_list_free(struct monster_list** monster_list);
 
+int monster_list_del_monster(struct monster_list** monster_list,int x,int y);
 
 #endif
