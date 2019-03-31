@@ -6,7 +6,9 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+#include <dirent.h>
 
 #include <map.h>
 #include <constant.h>
@@ -14,6 +16,8 @@
 #include <sprite.h>
 #include <window.h>
 #include <monster_list.h>
+#include <map_file.h>
+
 
 struct map {
 	int width;
@@ -194,7 +198,7 @@ void map_display(struct map* map)
 //a modif
 	monster_list_display(map->monster_list);
 }
-
+/*
 struct map* map_get_static(void)
 {
 	struct map* map = map_new(STATIC_MAP_WIDTH, STATIC_MAP_HEIGHT);
@@ -221,4 +225,54 @@ struct map* map_get_static(void)
 	monster_init_map(map,map->monster_list);
 
 	return map;
+}*/
+
+struct map* map_init(char* path_file){
+	assert(path_file);
+
+	int width = map_file_get_width(path_file);
+	int height = map_file_get_width(path_file);
+	unsigned char* themap = map_file_read(path_file,width,height);
+	struct map* map = map_new(width, height);
+
+	for (int i = 0; i < width * height; i++)
+		map->grid[i] = themap[i];
+	free(themap);
+
+	map->monster_list= monster_list_init();
+	monster_init_map(map,map->monster_list);
+	return map;
+}
+
+struct map** maps_init(char* path_dir,char* word_set_name,int* levels){
+	char* path_file;
+	DIR *d;
+	struct dirent *dir;
+	d = opendir(path_dir);
+
+	struct map **maps = NULL;
+	if (d){	//si le ficher est bien ouvert
+			int i=0;
+			while ((dir = readdir(d)) != NULL)	//parcours element (fichier, rep ...) du rep
+			{
+					if(dir->d_type == DT_REG){ //si l'element est un fichier
+							if (check_str(word_set_name,dir->d_name)) {
+
+								//allocation de la memoire
+								if (maps==NULL) {
+									maps = malloc( sizeof(*maps) );
+								}else{
+									maps = realloc(maps,i* sizeof(*maps));
+								}
+								path_file = get_file_path(path_dir,dir->d_name);
+								maps[i] = map_init(path_file);
+								i++;
+								free(path_file);
+							}
+					}
+			}
+			closedir(d);
+			(*levels)=i;
+	}
+	return maps;
 }
