@@ -101,6 +101,11 @@ enum bonus_type map_get_bonus_type(struct map* map, int x, int y){
 	return map->grid[CELL(x,y)] & 0x0f;
 }
 
+enum door_type map_get_door_type(struct map* map, int x, int y){
+	assert(map && map_is_inside(map, x, y));
+	return map->grid[CELL(x,y)] & 0x0f;
+}
+
 void map_set_bonus_type(struct map* map, int x, int y, enum  bonus_type bonus) {
 		assert(map && map_is_inside(map, x, y));
 		unsigned char type = map->grid[CELL(x,y)];

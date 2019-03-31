@@ -11,6 +11,7 @@
 #include <sprite.h>
 #include <bomb_list.h>
 #include <monster_list.h>
+#include <myfonct.h>
 
 struct game {
 	struct map** maps;       // the game's map
@@ -119,18 +120,22 @@ static short input_keyboard(struct game* game) {
 			case SDLK_UP:
 				player_set_current_way(player, NORTH);
 				player_move(player, map);
+				door_move(game);
 				break;
 			case SDLK_DOWN:
 				player_set_current_way(player, SOUTH);
 				player_move(player, map);
+				door_move(game);
 				break;
 			case SDLK_RIGHT:
 				player_set_current_way(player, EAST);
 				player_move(player, map);
+				door_move(game);
 				break;
 			case SDLK_LEFT:
 				player_set_current_way(player, WEST);
 				player_move(player, map);
+				door_move(game);
 				break;
 			case SDLK_SPACE:
 				if(player_get_nb_bomb(player)>=1){
@@ -158,4 +163,9 @@ int game_update(struct game* game) {
 		return 1; // exit game
 
 	return 0;
+}
+
+void game_set_current_lvl(struct game* game,int lvl) {
+	assert(game);
+	game->level = lvl;
 }

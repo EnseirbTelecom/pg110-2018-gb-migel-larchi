@@ -3,6 +3,7 @@
 #include <map.h>
 #include <player.h>
 #include <constant.h>
+#include <game.h>
 
 int boxe_move(enum direction direction,struct map* map,int x,int y){
   int x1=x, y1=y;
@@ -77,5 +78,18 @@ void cell_bonus_move(struct map* map,struct player *player,int x,int y){
 
     case BONUS_MONSTER:
     break;
+  }
+}
+
+void door_move(struct game* game){
+  struct map* map = game_get_current_map(game);
+  struct player* player = game_get_player(game);
+
+  int x = player_get_x(player);
+  int y = player_get_y(player);
+
+  if (map_get_cell_type(map,x,y) == CELL_DOOR) {
+    enum door_type door_type = map_get_door_type(map,x,y);
+    game_set_current_lvl(game,door_type);
   }
 }
