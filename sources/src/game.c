@@ -24,14 +24,14 @@ struct game*
 game_new(void) {
 	sprite_load(); // load sprites into process memory
 
+	int levels = 0;
 	struct game* game = malloc(sizeof(*game));
 	game->maps = malloc(sizeof(struct game));
-	game->maps[0] = map_get_static();
-	game->levels = 1;
-	game->level = 0;
+	game->maps = maps_init("./map","easy",&levels);
+	game->levels = levels;
+	game->level = 1;
 	game->bombs=bomb_list_init();
 	game->player = player_init(3);
-
 
 	// Set default location of the player
 	player_set_position(game->player, 1, 0);
