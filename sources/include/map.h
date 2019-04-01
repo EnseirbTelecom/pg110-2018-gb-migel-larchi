@@ -101,4 +101,6 @@ struct map* map_init(char* path_file);
 // init  a array of map  from a path of a directory and word_set_name
 struct map** maps_init(char* path_dir,char* word_set_name,int* levels);
 
+void maps_update(struct map** maps,int nb_lvl);
+
 #endif /* MAP_H_ */

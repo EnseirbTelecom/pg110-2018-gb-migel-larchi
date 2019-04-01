@@ -18,7 +18,6 @@ struct game {
 	short levels;        // nb maps of the game
 	short level;
 	struct player* player;
-	struct bomb_list* bombs; //list of bombs
 };
 
 struct game*
@@ -31,7 +30,6 @@ game_new(void) {
 	game->maps = maps_init("./map","easy",&levels);
 	game->levels = levels;
 	game->level = 0;
-	game->bombs=bomb_list_init();
 	game->player = player_init(3);
 
 	// Set default location of the player
@@ -97,7 +95,6 @@ void game_display(struct game* game) {
 	assert(game);
 	window_clear();
 	game_banner_display(game);
-	bomb_list_display(game_get_current_map(game),game->bombs);
 	map_display(game_get_current_map(game));
 	player_display(game->player);
 	window_refresh();
@@ -107,7 +104,7 @@ static short input_keyboard(struct game* game) {
 	SDL_Event event;
 	struct player* player = game_get_player(game);
 	struct map* map = game_get_current_map(game);
-	struct bomb_list* bomb_list=game->bombs;
+	struct bomb_list* bomb_list=*(map_get_bombs(map));
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -155,10 +152,9 @@ static short input_keyboard(struct game* game) {
 
 int game_update(struct game* game) {
 	struct map* map=game_get_current_map(game);
+	//struct bomb_list** bomb_list=map_get_bombs(map);
 	player_update_state(map,game->player);
-	bomb_list_update(map,&(game->bombs));
-	monster_list_update(map);
-
+	maps_update(game->maps,game->levels);
 	if (input_keyboard(game))
 		return 1; // exit game
 

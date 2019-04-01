@@ -90,6 +90,5 @@ int map_file_get_lvl(char* fname){
   char_lvl = strtok(NULL,".");
   int result=atoi(char_lvl);
 
-  printf("lvl: %d \n",result );
   return result;
 }
