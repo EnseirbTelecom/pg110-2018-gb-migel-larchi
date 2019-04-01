@@ -91,5 +91,6 @@ void door_move(struct game* game){
   if (map_get_cell_type(map,x,y) == CELL_DOOR) {
     enum door_type door_type = map_get_door_type(map,x,y);
     game_set_current_lvl(game,door_type);
+//    player_set_position(player,0,0);
   }
 }

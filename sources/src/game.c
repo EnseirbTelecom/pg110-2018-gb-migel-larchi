@@ -30,7 +30,7 @@ game_new(void) {
 	game->maps = malloc(sizeof(struct game));
 	game->maps = maps_init("./map","easy",&levels);
 	game->levels = levels;
-	game->level = 1;
+	game->level = 0;
 	game->bombs=bomb_list_init();
 	game->player = player_init(3);
 

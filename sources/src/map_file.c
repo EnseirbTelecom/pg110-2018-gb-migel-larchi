@@ -79,3 +79,17 @@ char* get_file_path(char* char1,char* char2){
 
   return char3;
 }
+
+int map_file_get_lvl(char* fname){
+  assert(fname);
+  char fname_cp[256];
+  strcpy(fname_cp, fname);
+  char* char_lvl;
+
+  char_lvl = strtok(fname_cp,"_");
+  char_lvl = strtok(NULL,".");
+  int result=atoi(char_lvl);
+
+  printf("lvl: %d \n",result );
+  return result;
+}

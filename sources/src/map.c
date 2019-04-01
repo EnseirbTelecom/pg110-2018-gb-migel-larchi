@@ -255,28 +255,40 @@ struct map** maps_init(char* path_dir,char* word_set_name,int* levels){
 	struct dirent *dir;
 	d = opendir(path_dir);
 
-	struct map **maps = NULL;
+	struct map** maps = NULL;
 	if (d){	//si le ficher est bien ouvert
-			int i=0;
+			int nb_maps = 0;
+			int i = 0;
+			int lvl=0;
 			while ((dir = readdir(d)) != NULL)	//parcours element (fichier, rep ...) du rep
 			{
 					if(dir->d_type == DT_REG){ //si l'element est un fichier
 							if (check_str(word_set_name,dir->d_name)) {
+								lvl=map_file_get_lvl(dir->d_name);
+
+								if(lvl<nb_maps){
+									nb_maps=lvl;
+								}
 
 								//allocation de la memoire
 								if (maps==NULL) {
-									maps = malloc( sizeof(*maps) );
+									maps = malloc( sizeof(*maps));
 								}else{
-									maps = realloc(maps,i* sizeof(*maps));
+									maps = realloc(maps,(nb_maps+1)* sizeof(*maps));
 								}
+
+
 								path_file = get_file_path(path_dir,dir->d_name);
-								maps[i] = map_init(path_file);
-								i++;
+								maps[lvl] = map_init(path_file);
 								free(path_file);
+								i++;
 							}
 					}
 			}
 			closedir(d);
+			if(i!=nb_maps){
+				assert("il manque des map");
+			}
 			(*levels)=i;
 	}
 	return maps;

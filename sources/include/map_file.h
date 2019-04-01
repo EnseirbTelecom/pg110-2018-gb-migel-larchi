@@ -15,6 +15,8 @@ int check_str(char* char1,char* char2);
 // get the file path when the have the dir path and file name
 char* get_file_path(char* char1,char* char2);
 
+//get the level from file name
+int map_file_get_lvl(char* path);
 
 #define MAP_FILE_H
 #endif
