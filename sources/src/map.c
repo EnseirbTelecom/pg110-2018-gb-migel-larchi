@@ -11,11 +11,13 @@
 #include <dirent.h>
 
 #include <map.h>
+#include <game.h>
 #include <constant.h>
 #include <misc.h>
 #include <sprite.h>
 #include <window.h>
 #include <monster_list.h>
+#include <bomb_list.h>
 #include <map_file.h>
 
 
@@ -24,7 +26,7 @@ struct map {
 	int height;
 	unsigned char* grid;
 	struct monster_list* monster_list;
-
+	struct bomb_list* bombs; //list of bombs
 };
 
 #define CELL(i,j) ( (i) + (j) * map->width)
@@ -200,7 +202,8 @@ void map_display(struct map* map)
 	    }
 	  }
 	}
-//a modif
+
+	bomb_list_display(map,map->bombs);
 	monster_list_display(map->monster_list);
 }
 /*
@@ -246,6 +249,8 @@ struct map* map_init(char* path_file){
 
 	map->monster_list= monster_list_init();
 	monster_init_map(map,map->monster_list);
+
+	map->bombs=bomb_list_init();
 	return map;
 }
 
@@ -266,15 +271,15 @@ struct map** maps_init(char* path_dir,char* word_set_name,int* levels){
 							if (check_str(word_set_name,dir->d_name)) {
 								lvl=map_file_get_lvl(dir->d_name);
 
-								if(lvl<nb_maps){
-									nb_maps=lvl;
+								if((lvl+1)>nb_maps){
+									nb_maps=(lvl+1);
 								}
 
 								//allocation de la memoire
 								if (maps==NULL) {
-									maps = malloc( sizeof(*maps));
+									maps = malloc((nb_maps)* sizeof(*maps));
 								}else{
-									maps = realloc(maps,(nb_maps+1)* sizeof(*maps));
+									maps = realloc(maps,(nb_maps)* sizeof(*maps));
 								}
 
 
@@ -286,10 +291,21 @@ struct map** maps_init(char* path_dir,char* word_set_name,int* levels){
 					}
 			}
 			closedir(d);
-			if(i!=nb_maps){
-				assert("il manque des map");
-			}
+			assert(i==nb_maps);
 			(*levels)=i;
 	}
 	return maps;
+}
+
+struct bomb_list** map_get_bombs(struct map* map){
+	assert(map);
+	return &(map->bombs);
+}
+
+void maps_update(struct map** maps,int nb_lvl) {
+	assert(maps);
+	for (int i = 0; i < nb_lvl; i++) {
+		monster_list_update(maps[i]);
+		bomb_list_update(maps[i],map_get_bombs(maps[i]));
+	}
 }

@@ -32,4 +32,6 @@ int game_update(struct game* game);
 //set current map
 void game_set_current_lvl(struct game* game,int lvl);
 
+struct bomb_list** map_get_bombs(struct map* map);
+
 #endif /* GAME_H_ */
