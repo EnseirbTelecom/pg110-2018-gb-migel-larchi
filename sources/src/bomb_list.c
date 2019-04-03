@@ -58,6 +58,7 @@ void bomb_list_update(struct map *map, struct bomb_list** pbomb_list){
   struct bomb *bomb=bomb_list->bomb;
   int bol=1;
   while (bomb) {
+    bomb_update(map,bomb);
     if(bomb && bol==1 ){
       if ( bomb_get_state(bomb)<0 ){
         struct player *player=bomb_get_player(bomb);
@@ -65,11 +66,10 @@ void bomb_list_update(struct map *map, struct bomb_list** pbomb_list){
         bomb_list_set_exploded_to_2( bomb_list->next);
         bomb_list_free_first_ele(pbomb_list);
         if(player_get_max_bomb(player)>player_get_nb_bomb(player))
-        player_inc_nb_bomb(player);
+          player_inc_nb_bomb(player);
         bol = 0;
       }
     }
-    bomb_update(map,bomb);
     bomb_list = bomb_list->next;
     bomb=bomb_list->bomb;
   }

@@ -10,12 +10,19 @@
 #include  <map.h>
 #include <monster_list.h>
 
+#define EXPTIME1	600
+#define EXPTIME2	1200
+#define EXPTIME3	1800
+#define EXPTIME4	2400
+#define EXPTIME5	3000
+
 struct bomb{
   int x,y;
   int TIME;
   int range;
   int exploded;
   struct player* player;
+  int state;
 };
 
 struct bomb* bomb_init(struct map* map,struct player* player){
@@ -34,6 +41,7 @@ struct bomb* bomb_init(struct map* map,struct player* player){
   bomb->exploded=0;
   bomb->player=player;
   bomb->range=player_get_range(player);
+  bomb->state=4;
   return bomb;
 };
 
@@ -61,9 +69,7 @@ void bomb_set_exploded(struct bomb *bomb,int exploded){
 
 int bomb_get_state(struct bomb* bomb){
   assert(bomb);
-  int state=SDL_GetTicks() - bomb->TIME;
-  state=state/1000;
-  return 4-state;
+  return bomb->state;
 };
 
 void bomb_display(struct map *map,struct bomb *bomb){
@@ -74,10 +80,28 @@ void bomb_display(struct map *map,struct bomb *bomb){
   window_display_image(sprite_get_bomb(state),x* SIZE_BLOC,y* SIZE_BLOC);
 };
 
+void bomb_update_state(struct bomb* bomb) {
+  assert(bomb);
+  int TIME = SDL_GetTicks() - bomb->TIME;
+  if (TIME<EXPTIME1) {
+    bomb->state = 4;
+  } else if (TIME<EXPTIME2) {
+    bomb->state = 3;
+  } else if (TIME<EXPTIME3) {
+    bomb->state = 2;
+  } else if (TIME<EXPTIME4) {
+    bomb->state = 1;
+  } else if (TIME<EXPTIME5) {
+    bomb->state = 0;
+  } else{
+      bomb->state = -1;
+  }
+}
+
 void bomb_update(struct map* map,struct bomb* bomb){
   assert(map);
   assert(bomb);
-
+  bomb_update_state(bomb);
   int state = bomb_get_state(bomb);
   if(state==0 && (bomb->exploded)==0){
     //si la bombe vient exploser
@@ -92,7 +116,7 @@ void bomb_update(struct map* map,struct bomb* bomb){
 int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
     enum cell_type cell_type = map_get_cell_type(map,x,y);
     enum bonus_type bonus_type=map_get_bonus_type(map,x,y);
-    
+
     switch (cell_type) {
       case CELL_EMPTY:
         map_set_cell_type(map,x,y,CELL_EXPLOSION);
