@@ -103,4 +103,6 @@ struct map** maps_init(char* path_dir,char* word_set_name,int* levels);
 
 void maps_update(struct map** maps,int nb_lvl);
 
+void map_open_the_door(struct map* map,int x,int y) ;
+
 #endif /* MAP_H_ */
