@@ -92,13 +92,21 @@ void door_move(struct game* game){
     enum door_type door_type = map_get_door_type(map,x,y);
     if( (door_type%2) == 1 ){ //si the door is open
       game_set_current_lvl(game,(door_type>>1));
-    }else{
-      if(player_get_key(player)>0){
-          map_open_the_door(map,x,y);
-          player_dec_key(player);
-          game_set_current_lvl(game,(door_type>>1));
-      }
+      //    player_set_position(player,0,0);
     }
-//    player_set_position(player,0,0);
+  }
+}
+
+void open_the_door(struct game* game) {
+  struct map* map = game_get_current_map(game);
+  struct player* player = game_get_player(game);
+
+  int x = player_get_x(player);
+  int y = player_get_y(player);
+  enum door_type door_type = map_get_door_type(map,x,y);
+  if(player_get_key(player)>0){
+      map_open_the_door(map,x,y);
+      player_dec_key(player);
+      game_set_current_lvl(game,(door_type>>1));
   }
 }

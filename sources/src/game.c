@@ -119,6 +119,8 @@ static short input_keyboard(struct game* game) {
 	struct player* player = game_get_player(game);
 	struct map* map = game_get_current_map(game);
 	struct bomb_list* bomb_list=*(map_get_bombs(map));
+	int x = player_get_x(player);
+	int y = player_get_y(player);
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -149,9 +151,14 @@ static short input_keyboard(struct game* game) {
 				door_move(game);
 				break;
 			case SDLK_SPACE:
-				if(player_get_nb_bomb(player)>=1){
-					bomb_list_add(map,player,bomb_list);
-					player_dec_nb_bomb(player);
+				if (map_get_cell_type(map,x,y) == CELL_DOOR){
+					if(map_get_door_type(map,x,y)%2 == 0)
+						open_the_door(game);
+				} else {
+					if(player_get_nb_bomb(player)>=1){
+						bomb_list_add(map,player,bomb_list);
+						player_dec_nb_bomb(player);
+					}
 				}
 				break;
 			default:
