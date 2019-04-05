@@ -20,6 +20,7 @@ struct player {
 	int max_bomb;
 	int  range;
 	int state; // state=>0 => player est invulneratble
+	int key;
 };
 
 struct player* player_init(int bombs) {
@@ -32,6 +33,8 @@ struct player* player_init(int bombs) {
 	player->max_bomb = bombs;
 	player->life=3;
 	player->state=-1;
+	player->key=0;
+
 	return player;
 }
 
@@ -127,6 +130,21 @@ void player_dec_range(struct player * player){
 	player->range -= 1;
 }
 
+void player_inc_key(struct player* player){
+	assert(player);
+	player->key += 1;
+}
+
+void player_dec_key(struct player* player) {
+	assert(player);
+	player -> key -= 1;
+}
+
+int player_get_key(struct player* player){
+	assert(player);
+	return player->key;
+}
+
 static int player_move_aux(struct player* player, struct map* map, int x, int y) {
 	enum direction direction;
 	direction=player->direction;
@@ -152,8 +170,12 @@ static int player_move_aux(struct player* player, struct map* map, int x, int y)
 		map_set_cell_type(map,x,y,CELL_EMPTY);
 		break;
 
-	case CELL_MONSTER:
-		break;
+ 	case CELL_KEY:
+	if (player->key <9) {
+		map_set_cell_type(map,x,y,CELL_EMPTY);
+		player_inc_key(player);
+	}
+	break;
 
 	default:
 		break;
