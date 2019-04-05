@@ -19,6 +19,7 @@
 #define MAP_TREE        "sprite/tree.png"
 
 // Sprites of Banner
+#define BANNER_FLAG	"sprite/flag.png"
 #define BANNER_LINE		"sprite/banner_line.png"
 #define BANNER_LIFE		"sprite/banner_life.png"
 #define BANNER_BOMB		"sprite/bomb3.png"
@@ -66,6 +67,7 @@ SDL_Surface* banner_life;
 SDL_Surface* banner_bomb;
 SDL_Surface* banner_range;
 SDL_Surface* banner_line;
+SDL_Surface* banner_flag;
 
 // map
 SDL_Surface* box;
@@ -107,6 +109,7 @@ static void banner_load() {
 	banner_bomb = image_load(BANNER_BOMB);
 	banner_range = image_load(BANNER_RANGE);
 	banner_line = image_load(BANNER_LINE);
+	banner_flag = image_load(BANNER_FLAG);
 }
 
 static void banner_unload() {
@@ -120,6 +123,7 @@ static void banner_unload() {
 	SDL_FreeSurface(banner_bomb);
 	SDL_FreeSurface(banner_range);
 	SDL_FreeSurface(banner_life);
+	SDL_FreeSurface(banner_flag);
 }
 
 static void map_load() {
@@ -286,4 +290,9 @@ SDL_Surface* sprite_get_bomb(int TIME){
 SDL_Surface* sprite_get_monster(enum direction direction) {
 	assert(monster_img[direction]);
 	return monster_img[direction];
+}
+
+SDL_Surface* sprite_get_banner_flag(){
+	assert(banner_flag);
+	return banner_flag;
 }

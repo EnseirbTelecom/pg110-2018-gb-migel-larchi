@@ -72,10 +72,10 @@ void game_banner_display(struct game* game) {
 	int x;
 
 	x = 0 * white_bloc;
-	window_display_image(sprite_get_key(),x,y);
+	window_display_image(sprite_get_banner_flag(),x,y);
 
 	x = 0 * white_bloc + 1 * SIZE_BLOC;
-	window_display_image(sprite_get_number(1),x,y);
+	window_display_image(sprite_get_number(game->level),x,y);
 
 	x = 1 * white_bloc + 2 * SIZE_BLOC;
 	window_display_image(sprite_get_key(),x,y);
