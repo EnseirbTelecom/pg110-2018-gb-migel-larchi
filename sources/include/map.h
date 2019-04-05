@@ -27,6 +27,17 @@ enum bonus_type {
 	BONUS_LIFE
 };
 
+enum door_type{
+	DOOR_LVL0=0,
+	DOOR_LVL1,
+	DOOR_LVL2,
+	DOOR_LVL3,
+	DOOR_LVL4,
+	DOOR_LVL5,
+	DOOR_LVL6,
+	DOOR_LVL7,
+};
+
 enum scenery_type {
 	SCENERY_STONE = 1,    // 0001
 	SCENERY_TREE  = 2,    // 0010
@@ -63,6 +74,9 @@ enum cell_type map_get_cell_type(struct map* map, int x, int y);
 // Return the type of a bonus
 enum bonus_type map_get_bonus_type(struct map* map, int x, int y);
 
+// Return the type of a bonus
+enum door_type map_get_door_type(struct map* map, int x, int y);
+
 //set the bonus type
 void map_set_bonus_type(struct map* map, int x, int y, enum  bonus_type bonus) ;
 
@@ -86,5 +100,7 @@ struct map* map_init(char* path_file);
 
 // init  a array of map  from a path of a directory and word_set_name
 struct map** maps_init(char* path_dir,char* word_set_name,int* levels);
+
+void maps_update(struct map** maps,int nb_lvl);
 
 #endif /* MAP_H_ */

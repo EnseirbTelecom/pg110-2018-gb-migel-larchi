@@ -11,11 +11,13 @@
 #include <dirent.h>
 
 #include <map.h>
+#include <game.h>
 #include <constant.h>
 #include <misc.h>
 #include <sprite.h>
 #include <window.h>
 #include <monster_list.h>
+#include <bomb_list.h>
 #include <map_file.h>
 
 
@@ -24,7 +26,7 @@ struct map {
 	int height;
 	unsigned char* grid;
 	struct monster_list* monster_list;
-
+	struct bomb_list* bombs; //list of bombs
 };
 
 #define CELL(i,j) ( (i) + (j) * map->width)
@@ -97,6 +99,11 @@ enum cell_type map_get_cell_type(struct map* map, int x, int y)
 }
 
 enum bonus_type map_get_bonus_type(struct map* map, int x, int y){
+	assert(map && map_is_inside(map, x, y));
+	return map->grid[CELL(x,y)] & 0x0f;
+}
+
+enum door_type map_get_door_type(struct map* map, int x, int y){
 	assert(map && map_is_inside(map, x, y));
 	return map->grid[CELL(x,y)] & 0x0f;
 }
@@ -195,7 +202,8 @@ void map_display(struct map* map)
 	    }
 	  }
 	}
-//a modif
+
+	bomb_list_display(map,map->bombs);
 	monster_list_display(map->monster_list);
 }
 /*
@@ -241,6 +249,8 @@ struct map* map_init(char* path_file){
 
 	map->monster_list= monster_list_init();
 	monster_init_map(map,map->monster_list);
+
+	map->bombs=bomb_list_init();
 	return map;
 }
 
@@ -250,29 +260,52 @@ struct map** maps_init(char* path_dir,char* word_set_name,int* levels){
 	struct dirent *dir;
 	d = opendir(path_dir);
 
-	struct map **maps = NULL;
+	struct map** maps = NULL;
 	if (d){	//si le ficher est bien ouvert
-			int i=0;
+			int nb_maps = 0;
+			int i = 0;
+			int lvl=0;
 			while ((dir = readdir(d)) != NULL)	//parcours element (fichier, rep ...) du rep
 			{
 					if(dir->d_type == DT_REG){ //si l'element est un fichier
 							if (check_str(word_set_name,dir->d_name)) {
+								lvl=map_file_get_lvl(dir->d_name);
+
+								if((lvl+1)>nb_maps){
+									nb_maps=(lvl+1);
+								}
 
 								//allocation de la memoire
 								if (maps==NULL) {
-									maps = malloc( sizeof(*maps) );
+									maps = malloc((nb_maps)* sizeof(*maps));
 								}else{
-									maps = realloc(maps,i* sizeof(*maps));
+									maps = realloc(maps,(nb_maps)* sizeof(*maps));
 								}
+
+
 								path_file = get_file_path(path_dir,dir->d_name);
-								maps[i] = map_init(path_file);
-								i++;
+								maps[lvl] = map_init(path_file);
 								free(path_file);
+								i++;
 							}
 					}
 			}
 			closedir(d);
+			assert(i==nb_maps);
 			(*levels)=i;
 	}
 	return maps;
+}
+
+struct bomb_list** map_get_bombs(struct map* map){
+	assert(map);
+	return &(map->bombs);
+}
+
+void maps_update(struct map** maps,int nb_lvl) {
+	assert(maps);
+	for (int i = 0; i < nb_lvl; i++) {
+		monster_list_update(maps[i]);
+		bomb_list_update(maps[i],map_get_bombs(maps[i]));
+	}
 }

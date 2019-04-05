@@ -49,6 +49,10 @@ int  player_get_max_bomb(struct player * player);
 void player_inc_max_bomb(struct player* player);
 void player_dec_max_bomb(struct player* player);
 
+int player_get_key(struct player* player);
+void player_inc_key(struct player * player);
+void player_dec_key(struct player * player);
+
 // Move the player according to the current direction
 int player_move(struct player* player, struct map* map);
 
