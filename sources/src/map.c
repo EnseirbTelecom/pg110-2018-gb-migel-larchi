@@ -108,6 +108,11 @@ enum door_type map_get_door_type(struct map* map, int x, int y){
 	return map->grid[CELL(x,y)] & 0x0f;
 }
 
+void map_open_the_door(struct map* map,int x,int y) {
+  assert(map);
+	map->grid[CELL(x,y)] = (map->grid[CELL(x,y)] | 0x01) ;
+}
+
 void map_set_bonus_type(struct map* map, int x, int y, enum  bonus_type bonus) {
 		assert(map && map_is_inside(map, x, y));
 		unsigned char type = map->grid[CELL(x,y)];
@@ -191,8 +196,11 @@ void map_display(struct map* map)
 	      window_display_image(sprite_get_key(), x, y);
 	      break;
 	    case CELL_DOOR:
-	      // pas de gestion du type de porte
-	      window_display_image(sprite_get_door_opened(), x, y);
+				if( (map_get_door_type(map,i,j) % 2) == 1){ // door is open if 1 digit is 1
+					window_display_image(sprite_get_door_opened(), x, y);
+				}else{
+					window_display_image(sprite_get_door_closed(), x, y);
+				}
 	      break;
 			case CELL_BOMB:
 				break;
