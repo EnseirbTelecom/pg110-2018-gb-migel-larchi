@@ -156,8 +156,10 @@ static short input_keyboard(struct game* game) {
 						open_the_door(game);
 				} else {
 					if(player_get_nb_bomb(player)>=1){
-						bomb_list_add(map,player,bomb_list);
-						player_dec_nb_bomb(player);
+						if (map_get_cell_type(map,x,y) != CELL_BOMB) {
+							bomb_list_add(map,player,bomb_list);
+							player_dec_nb_bomb(player);
+						}
 					}
 				}
 				break;
