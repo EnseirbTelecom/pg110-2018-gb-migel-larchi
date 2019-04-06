@@ -10,11 +10,8 @@
 #include  <map.h>
 #include <monster_list.h>
 
-#define EXPTIME1	600
-#define EXPTIME2	1200
-#define EXPTIME3	1800
-#define EXPTIME4	2400
-#define EXPTIME5	3000
+#define STATEDELAY	1000
+#define EXPDELAY	1000
 
 struct bomb{
   int x,y;
@@ -45,7 +42,6 @@ struct bomb* bomb_init(struct map* map,struct player* player){
   return bomb;
 };
 
-
 void bomb_free(struct bomb* bomb){
   assert(bomb);
   free(bomb);
@@ -61,7 +57,6 @@ int bomb_get_exploded(struct bomb *bomb){
   return bomb->exploded;
 };
 
-
 void bomb_set_exploded(struct bomb *bomb,int exploded){
   assert(bomb);
   bomb->exploded=exploded;
@@ -72,36 +67,52 @@ int bomb_get_state(struct bomb* bomb){
   return bomb->state;
 };
 
+int bomb_get_time(struct bomb* bomb){
+  assert(bomb);
+  return  bomb->TIME;
+}
+
+void bomb_set_time(struct bomb* bomb,int time){
+  assert(bomb);
+  bomb->TIME = time;
+}
+
 void bomb_display(struct map *map,struct bomb *bomb){
   assert(bomb);
   int x=bomb->x;
   int y=bomb->y;
   int state=bomb_get_state(bomb);
-  window_display_image(sprite_get_bomb(state),x* SIZE_BLOC,y* SIZE_BLOC);
+  if (state != 0)
+    window_display_image(sprite_get_bomb(state),x* SIZE_BLOC,y* SIZE_BLOC);
 };
 
-void bomb_update_state(struct bomb* bomb) {
+void bomb_update_state(struct map* map,struct bomb* bomb) {
+  assert(map);
   assert(bomb);
-  int TIME = SDL_GetTicks() - bomb->TIME;
-  if (TIME<EXPTIME1) {
-    bomb->state = 4;
-  } else if (TIME<EXPTIME2) {
-    bomb->state = 3;
-  } else if (TIME<EXPTIME3) {
-    bomb->state = 2;
-  } else if (TIME<EXPTIME4) {
-    bomb->state = 1;
-  } else if (TIME<EXPTIME5) {
+  int x = bomb->x;
+  int y = bomb->y;
+  int currentTIME = SDL_GetTicks();
+  int TIME = currentTIME - bomb->TIME;
+
+  if (map_get_cell_type(map,x,y) == CELL_EXPLOSION
+      && bomb->state > 0) {
+    bomb->TIME = currentTIME;
     bomb->state = 0;
-  } else{
+  } else {
+    if (TIME > STATEDELAY && bomb->state > 0) {
+      bomb->TIME = currentTIME;
+      bomb->state -= 1;
+    }
+    else if(TIME > EXPDELAY && bomb->state == 0){
       bomb->state = -1;
+    }
   }
 }
 
 void bomb_update(struct map* map,struct bomb* bomb){
   assert(map);
   assert(bomb);
-  bomb_update_state(bomb);
+  bomb_update_state(map,bomb);
   int state = bomb_get_state(bomb);
   if(state==0 && (bomb->exploded)==0){
     //si la bombe vient exploser
@@ -110,6 +121,9 @@ void bomb_update(struct map* map,struct bomb* bomb){
   }else if (state == 0 && (bomb->exploded)==2) {
     //si une bombe a exploser, on rafraichie les explosion
     bomb_explosion_map_set(map,bomb);
+  }else if (state < 0) {
+    bomb_explosion_end(map,bomb);
+    player_inc_nb_bomb(bomb->player);
   }
 }
 
@@ -123,10 +137,6 @@ int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
         return 1;
         break;
 
-
-      case CELL_KEY:
-        break;
-
       case CELL_BONUS:
         map_set_cell_type(map,x,y,CELL_EXPLOSION);
         return 1;
@@ -137,18 +147,12 @@ int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
         return 1;
         break;
 
-      case CELL_SCENERY:
-        break;
-
-      case CELL_DOOR:
-        break;
-
       case CELL_EXPLOSION:
         return 1;
-        //window_display_image(sprite_get_bomb(0),x*SIZE_BLOC,y*SIZE_BLOC);
       break;
 
       case CELL_BOMB:
+       map_set_cell_type(map,x,y,CELL_EXPLOSION);
         return 1;
         break;
 
@@ -157,6 +161,9 @@ int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
       map_set_bonus_type(map,x,y,bonus_type);
       return 0;
       break;
+
+    default:
+    break;
     }
   return 0;
 }
@@ -170,39 +177,21 @@ int bomb_explosion_map_set_cell_2(struct map *map,int x,int y) {
         return 1;
         break;
 
-
-      case CELL_KEY:
-        break;
-
       case CELL_BONUS:
         map_set_cell_type(map,x,y,CELL_EXPLOSION);
         return 1;
         break;
 
-      case CELL_MONSTER:
-
-        break;
-
-      case CELL_SCENERY:
-        break;
-
-      case CELL_DOOR:
-        break;
-
       case CELL_EXPLOSION:
         return 1;
-        //window_display_image(sprite_get_bomb(0),x*SIZE_BLOC,y*SIZE_BLOC);
       break;
 
       case CELL_BOMB:
         return 1;
         break;
 
-    case CELL_BOX:
-      return 0;
-      break;
+      default: return 0;
     }
-  return 0;
 }
 
 void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
@@ -215,7 +204,7 @@ void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
   int x_i=x-1;
   int yi=y+1;
   int y_i=y-1;
-
+  map_set_cell_type(map,x,y,CELL_EXPLOSION);
   if (bomb_get_exploded(bomb)==0) {
     int i=0;
     while (i<range) {
@@ -356,7 +345,7 @@ void bomb_explosion_end(struct map *map,struct bomb* bomb){
     }
     if(map_is_inside(map,x_i,y) && (map_get_cell_type(map,x_i,y)==CELL_EXPLOSION
     || map_get_cell_type(map,x_i,y)==CELL_BOMB
-    || map_get_cell_type(map,x_i,y)==CELL_EXPLOSION)){
+    || map_get_cell_type(map,x_i,y)==CELL_EMPTY)){
       enum bonus_type bonus_type=map_get_bonus_type(map,x_i,y);
       if (bonus_type) {
         map_set_cell_type(map,x_i,y,CELL_BONUS);

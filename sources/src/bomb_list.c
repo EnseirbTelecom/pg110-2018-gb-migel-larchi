@@ -30,7 +30,6 @@ void bomb_list_free_first_ele(struct bomb_list** bomb_list){
   *bomb_list=first_ele;
 };
 
-
 void bomb_list_free(struct bomb_list** bomb_list){
   assert(*bomb_list);
   while (*bomb_list!=NULL) {
@@ -49,29 +48,73 @@ void bomb_list_set_exploded_to_2(struct bomb_list *bomb_list){
   }
 };
 
+void bomb_list_clean(struct bomb_list** pbomb_list) {
+    assert(pbomb_list);
+    assert(*pbomb_list);
+    struct bomb_list* bomb_list = *pbomb_list;
+    struct bomb_list* prev;
+    struct bomb* bomb = bomb_list->bomb;
+
+    if (!bomb && bomb_list->next) {
+      (*pbomb_list) = (*pbomb_list)->next;
+      free(bomb_list);
+    }
+
+    bomb_list = (*pbomb_list);
+    prev = bomb_list;
+    bomb_list = bomb_list->next;
+
+    while (bomb_list != NULL) {
+        bomb = bomb_list->bomb;
+      if (bomb == NULL && bomb_list->next != NULL) {
+        prev->next = bomb_list->next;
+        free(bomb_list);
+        bomb_list = prev->next;
+      }else{
+        prev = bomb_list;
+        bomb_list = bomb_list->next;
+      }
+
+    }
+}
+
+void bomb_list_aux(struct map* map, struct bomb_list* bomb_list) {
+  assert(map);
+  assert(bomb_list);
+
+  while (bomb_list->bomb) {
+    bomb_update(map,bomb_list->bomb);
+    bomb_list = bomb_list->next;
+  }
+
+}
 
 void bomb_list_update(struct map *map, struct bomb_list** pbomb_list){
   assert(map);
   assert(pbomb_list);
   assert(*pbomb_list);
+
   struct bomb_list* bomb_list = *pbomb_list;
-  struct bomb *bomb=bomb_list->bomb;
-  int bol=1;
-  while (bomb) {
-    bomb_update(map,bomb);
-    if(bomb && bol==1 ){
-      if ( bomb_get_state(bomb)<0 ){
-        struct player *player=bomb_get_player(bomb);
-        bomb_explosion_end(map,bomb);
-        bomb_list_set_exploded_to_2( bomb_list->next);
-        bomb_list_free_first_ele(pbomb_list);
-        if(player_get_max_bomb(player)>player_get_nb_bomb(player))
-          player_inc_nb_bomb(player);
-        bol = 0;
+  struct bomb *bomb;
+  int need_to_refresh = 0;
+
+  while (bomb_list) {
+    bomb=bomb_list->bomb;
+    if (bomb) {
+      bomb_update(map,bomb);
+      if (bomb_get_state(bomb) < 0) {
+        need_to_refresh = 1;
+        bomb_free(bomb);
+        bomb_list -> bomb = NULL;
       }
     }
     bomb_list = bomb_list->next;
-    bomb=bomb_list->bomb;
+  }
+
+  bomb_list_clean(pbomb_list);
+  if (need_to_refresh) {
+    bomb_list_set_exploded_to_2(*pbomb_list);
+    bomb_list_aux(map,*pbomb_list);
   }
 }
 

@@ -23,6 +23,12 @@ void bomb_display(struct map* map,struct bomb* bomb);
 //get bomb state
 int bomb_get_state(struct bomb* bomb);
 
+// get bomb->TIME
+int bomb_get_time(struct bomb* bomb);
+
+//set bomb->TIME
+void bomb_set_time(struct bomb* bomb,int time);
+
 //set bomb explosion on map
 void bomb_explosion_map_set(struct map* map,struct bomb* bomb);
 
