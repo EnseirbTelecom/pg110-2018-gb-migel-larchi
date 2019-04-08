@@ -13,7 +13,7 @@ struct monster_list{
 };
 
 struct monster_list* monster_list_init(){
-  struct monster_list* monster_list=malloc(sizeof(*monster_list));
+  struct monster_list* monster_list = malloc(sizeof(*monster_list));
   if (!monster_list)
     error("Memory error");
   monster_list->monster=NULL;
@@ -65,9 +65,11 @@ void monster_list_update(struct map *map) {
     if (monster_get_lastTime(monster_list->monster)==0) {
       int x = monster_get_x(monster_list->monster);
       int y = monster_get_y(monster_list->monster);
+      monster_list=monster_list->next;
       monster_list_del_monster(pmonster_list,x,y);
+    }else{
+      monster_list=monster_list->next;
     }
-    monster_list=monster_list->next;
 
   }
 }

@@ -247,7 +247,7 @@ struct map* map_init(char* path_file){
 	assert(path_file);
 
 	int width = map_file_get_width(path_file);
-	int height = map_file_get_width(path_file);
+	int height = map_file_get_height(path_file);
 	unsigned char* themap = map_file_read(path_file,width,height);
 	struct map* map = map_new(width, height);
 

@@ -35,7 +35,7 @@ game_new(void) {
 	// Set default location of the player
 	player_set_position(game->player, 1, 0);
 	// Set default range of the player
-	player_set_range(game->player, 1);
+	player_set_range(game->player, 4);
 	return game;
 }
 
