@@ -19,7 +19,7 @@ struct player {
 	int bombs; //nb of bomb that player can put right now
 	int max_bomb;
 	int  range;
-	int state; // state=>0 => player est invulneratble
+	int state; // state=>0 => player est invulneratble ; SDL_GetTicks sinon
 	int key;
 };
 
@@ -251,13 +251,23 @@ void player_update_state(struct map *map,struct player* player) {
 			break;
 		}
 	}else{
-		if((SDL_GetTicks()-state)>1000)
+		if((SDL_GetTicks()-state)>2500)
 			player->state=-1;
 	}
 }
 
 void player_display(struct player* player) {
 	assert(player);
-	window_display_image(sprite_get_player(player->direction),
+	if (player->state < 0) {
+		window_display_image(sprite_get_player(player->direction),
+		player->x * SIZE_BLOC, player->y * SIZE_BLOC);
+	}else{
+		if ( ((SDL_GetTicks() - player->state)%300)>150 ) {
+			window_display_image(sprite_get_player(player->direction),
 			player->x * SIZE_BLOC, player->y * SIZE_BLOC);
+		}else{
+			window_display_image(sprite_get_player2(player->direction),
+			player->x * SIZE_BLOC, player->y * SIZE_BLOC);
+		}
+	}
 }
