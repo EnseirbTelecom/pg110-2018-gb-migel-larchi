@@ -122,3 +122,12 @@ int monster_list_del_monster(struct monster_list** monster_list,int x,int y) {
   return 1;
 
 }
+
+void monster_list_change_time(struct monster_list* monster_list){
+  assert(monster_list);
+  while (monster_list!= NULL) {
+    if(monster_list->monster)
+      monster_change_time(monster_list->monster);
+    monster_list = monster_list->next;
+  }
+}

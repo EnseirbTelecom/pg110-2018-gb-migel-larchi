@@ -189,3 +189,8 @@ void monster_new_pos(struct monster* monster, struct map* map) {
         break;
       }
 }
+
+void monster_change_time(struct monster* monster){
+  assert(monster);
+  monster->lastTime += SDL_GetTicks();
+}

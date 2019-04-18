@@ -105,4 +105,5 @@ void maps_update(struct map** maps,int nb_lvl);
 
 void map_open_the_door(struct map* map,int x,int y) ;
 
+void maps_end_pause(struct map** map, int levels);
 #endif /* MAP_H_ */

@@ -28,4 +28,6 @@ void monster_death(struct monster* monster);
 void monster_display(struct monster* monster);
 void monster_update(struct monster* monster, struct map* map, unsigned int speed);
 void monster_new_pos(struct monster* monster, struct map* map);
+void monster_change_time(struct monster* monster);
+
 #endif
