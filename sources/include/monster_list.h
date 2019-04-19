@@ -25,4 +25,6 @@ void monster_list_free(struct monster_list** monster_list);
 
 int monster_list_del_monster(struct monster_list** monster_list,int x,int y);
 
+void monster_list_change_time(struct monster_list* monster_list,int time);
+
 #endif

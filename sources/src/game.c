@@ -119,9 +119,10 @@ static short input_keyboard(struct game* game) {
 	struct player* player = game_get_player(game);
 	struct map* map = game_get_current_map(game);
 	struct bomb_list* bomb_list=*(map_get_bombs(map));
+	int levels = game->levels;
 	int x = player_get_x(player);
 	int y = player_get_y(player);
-
+	int time;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_QUIT:
@@ -162,6 +163,12 @@ static short input_keyboard(struct game* game) {
 						}
 					}
 				}
+				break;
+
+			case SDLK_p:
+				time = SDL_GetTicks();
+				pause();
+				maps_end_pause(game->maps,levels,time);
 				break;
 			default:
 				break;

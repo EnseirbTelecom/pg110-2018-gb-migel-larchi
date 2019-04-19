@@ -135,3 +135,12 @@ void bomb_list_add(struct map* map,struct player* player,struct bomb_list* bomb_
   bomb_list_aux->next=bomb_list_init();
 
 };
+
+void bomb_list_change_time(struct bomb_list* bomb_list,int time) {
+  assert(bomb_list);
+  while (bomb_list) {
+    if(bomb_list->bomb)
+      bomb_change_time(bomb_list->bomb,time);
+    bomb_list = bomb_list->next;
+  }
+}

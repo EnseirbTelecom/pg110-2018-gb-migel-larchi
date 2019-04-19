@@ -357,3 +357,13 @@ void bomb_explosion_end(struct map *map,struct bomb* bomb){
     }
   }
 };
+
+
+void bomb_change_time(struct bomb* bomb,int time) {
+  assert(bomb);
+  if (bomb->state>0) {
+    bomb->TIME = SDL_GetTicks() - (time - bomb->TIME);
+  }else{
+    bomb->TIME = SDL_GetTicks() - (time - bomb->TIME);
+  }
+}

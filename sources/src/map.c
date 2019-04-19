@@ -317,3 +317,18 @@ void maps_update(struct map** maps,int nb_lvl) {
 		bomb_list_update(maps[i],map_get_bombs(maps[i]));
 	}
 }
+
+void map_end_pause(struct map* map,int time) {
+	assert(map);
+	struct bomb_list* bomb_list = map-> bombs;
+	struct monster_list* monster_list = map-> monster_list;
+	monster_list_change_time(monster_list,time);
+	bomb_list_change_time(bomb_list,time);
+}
+
+void maps_end_pause(struct map** map, int levels,int time) {
+	assert(map);
+	for (int i = 0; i < levels; i++) {
+		map_end_pause(map[i],time);
+	}
+}

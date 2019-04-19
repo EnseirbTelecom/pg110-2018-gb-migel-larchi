@@ -5,6 +5,11 @@
 #include <constant.h>
 #include <game.h>
 
+#include <assert.h>
+#include <time.h>
+
+#include <misc.h>
+#include <window.h>
 int boxe_move(enum direction direction,struct map* map,int x,int y){
   int x1=x, y1=y;
   enum bonus_type bonus_type = map_get_bonus_type(map,x,y);
@@ -109,4 +114,20 @@ void open_the_door(struct game* game) {
       player_dec_key(player);
       game_set_current_lvl(game,(door_type>>1));
   }
+}
+
+int pause() {
+  SDL_Event event;
+  while(SDL_WaitEvent(&event)){  /* Loop until there are no events left on the queue */
+    switch(event.type){  /* Process the appropiate event type */
+      case SDL_KEYDOWN:  /* Handle a KEYDOWN event */
+        if (event.key.keysym.sym == SDLK_p) {
+          return 1;
+        }
+      break;
+      default:
+      break;
+    }
+  }
+return 0;
 }
