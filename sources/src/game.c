@@ -167,7 +167,7 @@ static short input_keyboard(struct game* game) {
 
 			case SDLK_p:
 				time = SDL_GetTicks();
-				pause();
+				return pause();
 				maps_end_pause(game->maps,levels,time);
 				break;
 			default:

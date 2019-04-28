@@ -4,7 +4,7 @@
 #include <player.h>
 #include <constant.h>
 #include <game.h>
-
+#include <sprite.h>
 #include <assert.h>
 #include <time.h>
 
@@ -116,13 +116,31 @@ void open_the_door(struct game* game) {
   }
 }
 
+void pause_display() {
+  window_display_image(sprite_get_monster(SOUTH),
+  0* SIZE_BLOC,0 * SIZE_BLOC);
+}
+
 int pause() {
   SDL_Event event;
-  while(SDL_WaitEvent(&event)){  /* Loop until there are no events left on the queue */
-    switch(event.type){  /* Process the appropiate event type */
-      case SDL_KEYDOWN:  /* Handle a KEYDOWN event */
-        if (event.key.keysym.sym == SDLK_p) {
-          return 1;
+  window_clear();
+  pause_display();
+  window_refresh();
+  while(SDL_WaitEvent(&event)){
+    switch(event.type){
+      case SDL_QUIT:
+        return 1;
+      case SDL_KEYDOWN:
+      //end of pause
+        switch (event.key.keysym.sym) {
+          case  SDLK_p:
+          return 0;
+
+          case SDLK_ESCAPE:
+    			return 0;
+
+          default:
+          break;
         }
       break;
       default:
