@@ -47,6 +47,12 @@ void game_free(struct game* game) {
 		map_free(game->maps[i]);
 }
 
+struct map** game_get_maps(struct game* game){
+	assert(game);
+	return game->maps;
+}
+
+
 struct map* game_get_current_map(struct game* game) {
 	assert(game);
 	return game->maps[game->level];
@@ -191,6 +197,15 @@ int game_update(struct game* game) {
 	return 0;
 }
 
+int game_get_levels(struct game* game){
+	assert(game);
+	return game->levels;
+}
+
+int game_get_current_lvl(struct game* game){
+	assert(game);
+	return game->level;
+}
 void game_set_current_lvl(struct game* game,int lvl) {
 	assert(game);
 	game->level = lvl;

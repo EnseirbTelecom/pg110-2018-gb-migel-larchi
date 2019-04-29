@@ -8,6 +8,7 @@
 #include <game.h>
 #include <window.h>
 #include <misc.h>
+#include <save.h>
 
 
 int main(int argc, char *argv[]) {
@@ -41,12 +42,10 @@ int main(int argc, char *argv[]) {
 		if (execution_speed < ideal_speed)
 			SDL_Delay(ideal_speed - execution_speed); // we are ahead of ideal time. let's wait.
 	}
-
+	save_create(game);
 	game_free(game);
 
 	SDL_Quit();
 
 	return EXIT_SUCCESS;
 }
-
-

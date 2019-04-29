@@ -86,6 +86,12 @@ int map_get_height(struct map* map)
 	return map->height;
 }
 
+unsigned char* map_get_grid(struct map* map){
+	assert(map);
+	return map->grid;
+}
+
+
 struct monster_list** map_get_monster_list(struct map* map){
 	assert(map);
 	assert(map->monster_list);
