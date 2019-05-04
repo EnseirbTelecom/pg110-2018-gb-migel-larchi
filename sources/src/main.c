@@ -8,7 +8,8 @@
 #include <game.h>
 #include <window.h>
 #include <misc.h>
-#include <save.h>
+#include <save_load.h>
+#include <sprite.h>
 
 
 int main(int argc, char *argv[]) {
@@ -17,8 +18,10 @@ int main(int argc, char *argv[]) {
 		error("Can't init SDL:  %s\n", SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
-
+//	sprite_load();
 	struct game* game = game_new();
+	game_free(game);
+	game =  load_save("./save/1.txt");
 
 	window_create(SIZE_BLOC * STATIC_MAP_WIDTH,
 	SIZE_BLOC * STATIC_MAP_HEIGHT + BANNER_HEIGHT + LINE_HEIGHT);
@@ -28,7 +31,6 @@ int main(int argc, char *argv[]) {
 	// to obtain the DEFAULT_GAME_FPS, we have to reach a loop duration of (1000 / DEFAULT_GAME_FPS) ms
 	int ideal_speed = 1000 / DEFAULT_GAME_FPS;
 	int timer, execution_speed;
-
 	// game loop
 	// static time rate implementation
 	int done = 0;
@@ -44,7 +46,7 @@ int main(int argc, char *argv[]) {
 	}
 	save_create(game);
 	game_free(game);
-
+	printf("okokokokokokokokokokokokokokokok\n");
 	SDL_Quit();
 
 	return EXIT_SUCCESS;

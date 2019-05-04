@@ -108,4 +108,8 @@ void maps_update(struct map** maps,int nb_lvl);
 void map_open_the_door(struct map* map,int x,int y) ;
 
 void maps_end_pause(struct map** map, int levels,int time);
+
+void map_set_grid(struct map* map,unsigned char cell,int i);
+
+
 #endif /* MAP_H_ */

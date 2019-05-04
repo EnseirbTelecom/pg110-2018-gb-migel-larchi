@@ -13,6 +13,7 @@ struct game;
 
 // Create a new game
 struct game* game_new();
+struct game* game_load(struct map** maps, short levels,short level,struct player* player);
 
 // Free a game
 void game_free(struct game* game);

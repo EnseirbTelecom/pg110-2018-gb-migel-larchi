@@ -26,7 +26,6 @@ game_new(void) {
 
 	int levels = 0;
 	struct game* game = malloc(sizeof(*game));
-	game->maps = malloc(sizeof(struct game));
 	game->maps = maps_init("./map","easy",&levels);
 	game->levels = levels;
 	game->level = 0;
@@ -36,6 +35,17 @@ game_new(void) {
 	player_set_position(game->player, 1, 0);
 	// Set default range of the player
 	player_set_range(game->player, 4);
+	return game;
+}
+
+struct game* game_load(struct map** maps, short levels,short level,struct player* player){
+	//sprite_load(); // load sprites into process memory
+
+	struct game* game = malloc(sizeof(*game));
+	game->maps = maps;
+	game->levels = levels;
+	game->level = level;
+	game->player = player;
 	return game;
 }
 
@@ -188,7 +198,6 @@ static short input_keyboard(struct game* game) {
 
 int game_update(struct game* game) {
 	struct map* map=game_get_current_map(game);
-	//struct bomb_list** bomb_list=map_get_bombs(map);
 	player_update_state(map,game->player);
 	maps_update(game->maps,game->levels);
 	if (input_keyboard(game))
