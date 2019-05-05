@@ -10,11 +10,12 @@
 #include <bomb_list.h>
 #include <monster_list.h>
 #include <myfonct.h>
+#include <stdlib.h>
 
 void go_to_next_line(FILE* file){
   int foo = fgetc(file);
   if (foo==EOF) {
-    printf("error EOF\n");
+    printf("erreur go_to_next_line: end of file\n");
     return;
   }
 
@@ -62,33 +63,48 @@ void save_maps(FILE* file, struct map** maps,int levels) {
     save_map(file,maps[i]);
   }
   fputc('\n',file);
-
 }
 
 void save_create(struct game* game) {
-  /*
-  levels level player_x player_y player_key player_life player_nb_bomb player_set_range,
-  map_widht map_height map_grid ...
-  map_widht map_height map_grid ...
-  */
   char name[255];
-  printf("Enter the save name: \n");
+  printf("Enter the save name (less than 250 character): \n");
   scanf("%s", name);
+  char file_name[255];
 
-  FILE *file = fopen("save/1.txt", "w");
+  sprintf(file_name,"save/%s.txt",name); //generate the file name: save/name.txt
+
+  FILE *file = fopen(file_name, "w");
   assert(file);
+
+  // first line of save file
+  //  nb_level current_lvl
   fprintf(file, "%d ",game_get_levels(game));
   fprintf(file, "%d ",game_get_current_lvl(game));
   fputc('\n',file);
+
+  //seconde line: player information
+  // x y key life nb_bomb range max_bomb direction
   save_player(file,game_get_player(game));
+
+  //next line: maps information
+  // each line represent one map
   save_maps(file,game_get_maps(game),game_get_levels(game));
 
   fclose(file);
 
 }
 
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+
 struct player* load_player(char* path_save) {
-  struct player* player = malloc(sizeof(player));
+  //load player information
+  struct player* player = player_init(0);
   FILE* fichier = fopen(path_save,"r");
   assert(fichier);
 
@@ -109,11 +125,13 @@ struct player* load_player(char* path_save) {
 }
 
 struct map* load_map(FILE* fichier){
+  //charge le contenu une ligne map
+  //fichier doit pointer sur le debut de la ligne
   assert(fichier);
   int width,height,cell;
   fscanf(fichier," %d : %d ",&width,&height);
   struct map* map = map_new(width,height);
-  for (int i = 0; i < (width)*(height); i++) {
+  for (int i = 0; i < (width*height); i++) {
     fscanf(fichier,"%d ",&cell);
     map_set_grid(map,cell,i);
   }
@@ -129,8 +147,7 @@ struct map** load_maps(char* path_save,int levels){
   go_to_next_line(fichier);
   go_to_next_line(fichier);
 
-  struct map** maps = (malloc(levels*sizeof( struct map *) ) );
-  printf("okoko levels: %d\n",levels);
+  struct map** maps = malloc(levels*sizeof(*maps));
   for (int i = 0; i < levels; i++) {
     maps[i] = load_map(fichier);
   }
@@ -146,11 +163,12 @@ void  load_lvl_s(char* path_save,int* levels,int* level ) {
   fscanf(fichier,"%d %d ",levels,level);
   fclose(fichier);
 }
+
 struct game* load_save(char* path_save){
   int level,levels;
   load_lvl_s(path_save,&levels,&level);
-  struct player* player = load_player(path_save);
   struct map** maps = load_maps(path_save,levels);
+  struct player* player = load_player(path_save);
   struct game* game = game_load(maps,levels,level,player);
 
   return  game;

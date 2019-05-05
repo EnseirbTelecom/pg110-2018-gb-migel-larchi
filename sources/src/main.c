@@ -18,10 +18,10 @@ int main(int argc, char *argv[]) {
 		error("Can't init SDL:  %s\n", SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
-//	sprite_load();
+
 	struct game* game = game_new();
-	game_free(game);
-	game =  load_save("./save/1.txt");
+//	game_free(game);
+  struct game*	game =  load_save("./save/1.txt");
 
 	window_create(SIZE_BLOC * STATIC_MAP_WIDTH,
 	SIZE_BLOC * STATIC_MAP_HEIGHT + BANNER_HEIGHT + LINE_HEIGHT);
@@ -44,10 +44,9 @@ int main(int argc, char *argv[]) {
 		if (execution_speed < ideal_speed)
 			SDL_Delay(ideal_speed - execution_speed); // we are ahead of ideal time. let's wait.
 	}
+	SDL_Quit();
 	save_create(game);
 	game_free(game);
-	printf("okokokokokokokokokokokokokokokok\n");
-	SDL_Quit();
 
 	return EXIT_SUCCESS;
 }
