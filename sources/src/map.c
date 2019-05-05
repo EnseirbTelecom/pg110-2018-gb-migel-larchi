@@ -72,6 +72,9 @@ void map_free(struct map *map)
 {
 	if (map == NULL )
 		return;
+	monster_list_free(&(map->monster_list));
+	bomb_list_free(&(map->bombs));
+
 	free(map->grid);
 	free(map);
 }

@@ -25,7 +25,8 @@ struct bomb_list* bomb_list_init(){
 void bomb_list_free_first_ele(struct bomb_list** bomb_list){
   struct bomb_list* first_ele=*bomb_list;
   first_ele=first_ele->next;
-  bomb_free((*bomb_list)->bomb);
+  if ((*bomb_list)->bomb)
+    bomb_free((*bomb_list)->bomb);
   free(*bomb_list);
   *bomb_list=first_ele;
 };
