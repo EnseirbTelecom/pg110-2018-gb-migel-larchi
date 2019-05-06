@@ -102,9 +102,27 @@ static int monster_move_aux(struct monster* monster, struct map* map, int x, int
 }
 
 static int monster_move_door(struct monster* monster, struct map* map, int x, int y) {
-	if (map_get_cell_type(map, x, y)==CELL_DOOR)
-		return 0;
-  else {return 1;}   
+  if (map_is_inside(map, x, y - 1)==1) {
+    if (map_get_cell_type(map, x, y - 1)==CELL_DOOR) {
+      return 0;
+    }
+  }
+  if (map_is_inside(map, x, y + 1)==1) {
+    if (map_get_cell_type(map, x, y + 1)==CELL_DOOR) {
+      return 0;
+    }
+  }
+  if (map_is_inside(map, x - 1, y)==1) {
+    if (map_get_cell_type(map, x - 1, y)==CELL_DOOR) {
+      return 0;
+    }
+  }
+  if (map_is_inside(map, x + 1, y)==1) {
+    if (map_get_cell_type(map, x + 1, y)==CELL_DOOR) {
+      return 0;
+    }
+  }
+  return 1;
 }
 
 
@@ -115,28 +133,28 @@ int monster_move(struct monster* monster, struct map* map) {
 
 	switch (monster->direction) {
 	case NORTH:
-		if (monster_move_aux(monster, map, x, y - 1) && monster_move_door(monster, map, x, y - 2)) {
+		if (monster_move_aux(monster, map, x, y - 1) && monster_move_door(monster, map, x, y - 1)) {
 			monster->y--;
 			move = 1;
 		}
 		break;
 
 	case SOUTH:
-		if (monster_move_aux(monster, map, x, y + 1) && monster_move_door(monster, map, x, y + 2)) {
+		if (monster_move_aux(monster, map, x, y + 1) && monster_move_door(monster, map, x, y + 1)) {
 			monster->y++;
 			move = 1;
 		}
 		break;
 
 	case WEST:
-		if (monster_move_aux(monster, map, x - 1, y) && monster_move_door(monster, map, x - 2, y)) {
+		if (monster_move_aux(monster, map, x - 1, y) && monster_move_door(monster, map, x - 1, y)) {
 			monster->x--;
 			move = 1;
 		}
 		break;
 
 	case EAST:
-		if (monster_move_aux(monster, map, x + 1, y) && monster_move_door(monster, map, x + 2, y)) {
+		if (monster_move_aux(monster, map, x + 1, y) && monster_move_door(monster, map, x + 1, y)) {
 			monster->x++;
 			move = 1;
 		}
