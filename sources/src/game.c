@@ -30,7 +30,6 @@ game_new(void) {
 	game->levels = levels;
 	game->level = 0;
 	game->player = player_init(3);
-
 	// Set default location of the player
 	player_set_position(game->player, 1, 0);
 	// Set default range of the player
@@ -124,8 +123,11 @@ void game_banner_display(struct game* game) {
 void game_display(struct game* game) {
 	assert(game);
 	window_clear();
+
 	game_banner_display(game);
+
 	map_display(game_get_current_map(game));
+
 	player_display(game->player);
 	window_refresh();
 }
@@ -183,7 +185,7 @@ static short input_keyboard(struct game* game) {
 
 			case SDLK_p:
 				time = SDL_GetTicks();
-				return pause();
+				pause();
 				maps_end_pause(game->maps,levels,time);
 				break;
 			default:
@@ -196,11 +198,17 @@ static short input_keyboard(struct game* game) {
 	return 0;
 }
 
-int game_update(struct game* game) {
-	struct map* map=game_get_current_map(game);
-	player_update_state(map,game->player);
-	maps_update(game->maps,game->levels);
-	if (input_keyboard(game))
+int game_update(struct game** game) {
+	if (player_get_life((*game)->player)==0) {
+		*game=gover((*game));
+		player_inc_life((*game)->player);
+		return 0;
+	}
+	struct map* map=game_get_current_map(*game);
+	//struct bomb_list** bomb_list=map_get_bombs(map);
+	player_update_state(map,(*game)->player);
+	maps_update((*game)->maps,(*game)->levels);
+	if (input_keyboard((*game)))
 		return 1; // exit game
 
 	return 0;

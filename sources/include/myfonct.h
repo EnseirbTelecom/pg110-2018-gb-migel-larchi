@@ -11,3 +11,4 @@ void door_move(struct game* game);
 void open_the_door(struct game* game);
 
 int pause();
+int gover();

@@ -28,7 +28,7 @@ struct map* game_get_current_map(struct game* game);
 void game_display(struct game* game);
 
 // update
-int game_update(struct game* game);
+int game_update(struct game** game);
 
 //set current map
 int game_get_levels(struct game* game);
