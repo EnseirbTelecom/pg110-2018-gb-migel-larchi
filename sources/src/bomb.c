@@ -119,7 +119,7 @@ void bomb_update(struct map* map,struct bomb* bomb){
     bomb_explosion_map_set(map,bomb);
     bomb->exploded=1;
   }else if (state == 0 && (bomb->exploded)==2) {
-    //si une bombe a exploser, on rafraichie les explosion
+    //si une bombe vient de finir d'exploser, on rafraichie toutes les explosions
     bomb_explosion_map_set(map,bomb);
   }else if (state < 0) {
     bomb_explosion_end(map,bomb);

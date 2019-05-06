@@ -24,7 +24,8 @@ struct monster_list* monster_list_init(){
 void monster_list_free_first_ele(struct monster_list** monster_list){
   struct monster_list* first_ele=*monster_list;
   first_ele=first_ele->next;
-  monster_free((*monster_list)->monster);
+  if((*monster_list)->monster)
+    monster_free((*monster_list)->monster);
   free(*monster_list);
   *monster_list=first_ele;
 };

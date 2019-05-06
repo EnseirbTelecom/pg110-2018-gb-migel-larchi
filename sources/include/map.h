@@ -67,6 +67,8 @@ void map_free(struct map* map);
 // Return the height and width of a map
 int map_get_width(struct map* map);
 int map_get_height(struct map* map);
+unsigned char* map_get_grid(struct map* map);
+
 
 // Return the type of a cell
 enum cell_type map_get_cell_type(struct map* map, int x, int y);
@@ -106,4 +108,8 @@ void maps_update(struct map** maps,int nb_lvl);
 void map_open_the_door(struct map* map,int x,int y) ;
 
 void maps_end_pause(struct map** map, int levels,int time);
+
+void map_set_grid(struct map* map,unsigned char cell,int i);
+
+
 #endif /* MAP_H_ */

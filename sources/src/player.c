@@ -19,9 +19,10 @@ struct player {
 	int bombs; //nb of bomb that player can put right now
 	int max_bomb;
 	int  range;
-	int state; // state=>0 => player est invulneratble ; SDL_GetTicks sinon
+	int state; // state=>0 => player est invulneratble ; -1 = vulneratble
 	int key;
 };
+
 
 struct player* player_init(int bombs) {
 	struct player* player = malloc(sizeof(*player));
@@ -37,112 +38,129 @@ struct player* player_init(int bombs) {
 
 	return player;
 }
-
-int player_get_life(struct player *player){
-	assert(player);
-	return player->life;
-}
-
-void player_inc_life(struct player* player) {
-	assert(player);
-	player->life +=1;
-}
-
-void player_dec_life(struct player *player){
-	assert(player);
-	player->life -=1;
-}
-
-void player_set_position(struct player *player, int x, int y) {
-	assert(player);
-	player->x = x;
-	player->y = y;
-}
-
-void player_set_range(struct player *player, int range){
-	assert(player);
-	player->range =range;
-}
-
 void player_free(struct player* player) {
 	assert(player);
 	free(player);
 }
 
+//fonction link to player->x and player->y
+void player_set_position(struct player *player, int x, int y) {
+	assert(player);
+	player->x = x;
+	player->y = y;
+}
 int player_get_x(struct player* player) {
 	assert(player != NULL);
 	return player->x;
 }
-
 int player_get_y(struct player* player) {
 	assert(player != NULL);
 	return player->y;
 }
 
-int player_get_range(struct player* player){
-	assert(player != NULL);
-	return player->range;
+//fonction link to player->direction
+enum direction player_get_direction(struct player* player){
+	assert(player);
+	return player->direction;
 }
-
-
 void player_set_current_way(struct player* player, enum direction way) {
 	assert(player);
 	player->direction = way;
 }
 
+//fonction link to player->nb_bomb
 int player_get_nb_bomb(struct player* player) {
 	assert(player);
 	return player->bombs;
 }
-
+void player_set_nb_bomb(struct player* player,int nb_bomb){
+	assert(player);
+	player->bombs = nb_bomb;
+}
 void player_inc_nb_bomb(struct player* player) {
 	assert(player);
 	player->bombs += 1;
 }
-
 void player_dec_nb_bomb(struct player* player) {
 	assert(player);
 	player->bombs -= 1;
 }
 
-int  player_get_max_bomb(struct player * player){
+//fonction link to player->life
+int player_get_life(struct player *player){
+	assert(player);
+	return player->life;
+}
+void player_set_life(struct player* player,int life){
 		assert(player);
-		return player->max_bomb;
+		player->life = life;
 }
-
-void player_inc_max_bomb(struct player* player) {
+void player_inc_life(struct player* player) {
 	assert(player);
-	player->max_bomb += 1;
+	player->life +=1;
 }
-
-void player_dec_max_bomb(struct player* player) {
+void player_dec_life(struct player *player){
 	assert(player);
-	player->max_bomb -= 1;
+	player->life -=1;
 }
 
+//fonction link to player->range
+int player_get_range(struct player* player){
+	assert(player != NULL);
+	return player->range;
+}
+void player_set_range(struct player* player,int range){
+	assert(player);
+	player->range = range;
+}
 void player_inc_range(struct player * player){
 	assert(player);
 	player->range += 1;
 }
-
 void player_dec_range(struct player * player){
 	assert(player);
 	player->range -= 1;
 }
 
+//fonction link to player->max_bomb
+int  player_get_max_bomb(struct player * player){
+	assert(player);
+	return player->max_bomb;
+}
+void player_set_max_bomb(struct player* player,int max_bomb){
+	assert(player);
+	player->max_bomb = max_bomb;
+}
+void player_inc_max_bomb(struct player* player) {
+	assert(player);
+	player->max_bomb += 1;
+}
+void player_dec_max_bomb(struct player* player) {
+	assert(player);
+	player->max_bomb -= 1;
+}
+
+//fonction link to player->key
+int player_get_key(struct player* player){
+	assert(player);
+	return player->key;
+}
+void player_set_key(struct player* player,int key){
+	assert(player);
+	player->key = key;
+}
 void player_inc_key(struct player* player){
 	assert(player);
 	player->key += 1;
 }
-
 void player_dec_key(struct player* player) {
 	assert(player);
 	player -> key -= 1;
 }
 
-int player_get_key(struct player* player){
+void player_set_state(struct player* player,unsigned int time){
 	assert(player);
-	return player->key;
+	player->state = time;
 }
 
 static int player_move_aux(struct player* player, struct map* map, int x, int y) {

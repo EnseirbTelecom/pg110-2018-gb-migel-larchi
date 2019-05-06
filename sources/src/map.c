@@ -53,6 +53,8 @@ struct map* map_new(int width, int height)
 	  for (j = 0; j < height; j++)
 	    map->grid[CELL(i,j)] = CELL_EMPTY;
 
+	map->monster_list= monster_list_init();
+	map->bombs=bomb_list_init();
 	return map;
 }
 
@@ -70,6 +72,9 @@ void map_free(struct map *map)
 {
 	if (map == NULL )
 		return;
+	monster_list_free(&(map->monster_list));
+	bomb_list_free(&(map->bombs));
+
 	free(map->grid);
 	free(map);
 }
@@ -85,6 +90,12 @@ int map_get_height(struct map* map)
 	assert(map);
 	return map->height;
 }
+
+unsigned char* map_get_grid(struct map* map){
+	assert(map);
+	return map->grid;
+}
+
 
 struct monster_list** map_get_monster_list(struct map* map){
 	assert(map);
@@ -255,10 +266,7 @@ struct map* map_init(char* path_file){
 		map->grid[i] = themap[i];
 	free(themap);
 
-	map->monster_list= monster_list_init();
 	monster_init_map(map,map->monster_list);
-
-	map->bombs=bomb_list_init();
 	return map;
 }
 
@@ -331,4 +339,9 @@ void maps_end_pause(struct map** map, int levels,int time) {
 	for (int i = 0; i < levels; i++) {
 		map_end_pause(map[i],time);
 	}
+}
+
+void map_set_grid(struct map* map,unsigned char cell,int i) {
+	assert(map);
+	map->grid[i] = cell;
 }
