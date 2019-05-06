@@ -20,8 +20,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	struct game* game = game_new();
-//	game_free(game);
-  struct game*	game =  load_save("./save/1.txt");
+	game_free(game);
+ 	game =  load_save("./save/1.txt");
 
 	window_create(SIZE_BLOC * STATIC_MAP_WIDTH,
 	SIZE_BLOC * STATIC_MAP_HEIGHT + BANNER_HEIGHT + LINE_HEIGHT);

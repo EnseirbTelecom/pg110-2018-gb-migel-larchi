@@ -34,7 +34,6 @@ void save_player(FILE* file, struct player* player) {
   fprintf(file, "%d ",player_get_y(player));
   fprintf(file, "%d ",player_get_key(player));
   fprintf(file, "%d ",player_get_life(player));
-  fprintf(file, "%d ",player_get_nb_bomb(player));
   fprintf(file, "%d ",player_get_range(player));
   fprintf(file, "%d ",player_get_max_bomb(player));
   fprintf(file, "%d ",player_get_direction(player));
@@ -110,12 +109,12 @@ struct player* load_player(char* path_save) {
 
   go_to_next_line(fichier);
   int x,y,key,life,nb_bomb,range,max_bomb,direction;
-  fscanf(fichier,"%d %d %d %d %d %d %d %d",&x,&y,&key,&life,&nb_bomb,&range,&max_bomb,&direction);
+  fscanf(fichier,"%d %d %d %d %d %d %d",&x,&y,&key,&life,&range,&max_bomb,&direction);
   player_set_position(player,x,y);
   player_set_current_way(player,direction);
   player_set_key(player,key);
   player_set_max_bomb(player,max_bomb);
-  player_set_nb_bomb(player,nb_bomb);
+  player_set_nb_bomb(player,max_bomb);
   player_set_range(player,range);
   player_set_life(player,life);
   player_set_state(player,-1);
