@@ -13,6 +13,7 @@
 #define MAP_KEY			"sprite/key.png"
 #define MAP_DOOR_OPENED	"sprite/door_opened.png"
 #define MAP_DOOR_CLOSED	"sprite/door_closed.png"
+#define GAME_OVER        "sprite/game_over.jpg"
 
 // Scenery elements
 #define MAP_STONE		"sprite/stone.png"
@@ -84,6 +85,9 @@ SDL_Surface* door_closed;
 SDL_Surface* stone;
 SDL_Surface* tree;
 
+// game over
+SDL_Surface* game_over;
+
 // bonus
 #define NB_BONUS 6
 SDL_Surface* bonus[NB_BONUS + 1];
@@ -133,6 +137,16 @@ static void banner_unload() {
 	SDL_FreeSurface(banner_range);
 	SDL_FreeSurface(banner_life);
 	SDL_FreeSurface(banner_flag);
+}
+
+static void game_over_load() {
+	// game over loading
+	game_over = image_load(GAME_OVER);
+}
+
+static void game_over_unload() {
+	// game over unloading
+	SDL_FreeSurface(game_over);
 }
 
 static void map_load() {
@@ -222,6 +236,7 @@ void sprite_load() {
 	banner_load();
 	player_load();
 	bomb_load();
+	game_over_load();
 }
 
 void sprite_free() {
@@ -231,6 +246,7 @@ void sprite_free() {
 	banner_unload();
 	player_unload();
 	bomb_unload();
+	game_over_unload();
 }
 
 SDL_Surface* sprite_get_number(short number) {
@@ -286,6 +302,11 @@ SDL_Surface* sprite_get_box() {
 SDL_Surface* sprite_get_key() {
 	assert(key);
 	return key;
+}
+
+SDL_Surface* sprite_get_game_over() {
+	assert(game_over);
+	return game_over;
 }
 
 SDL_Surface* sprite_get_stone() {

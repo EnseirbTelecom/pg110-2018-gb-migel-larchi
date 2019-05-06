@@ -117,13 +117,13 @@ void open_the_door(struct game* game) {
 }
 
 void pause_display() {
-  window_display_image(sprite_get_monster(SOUTH),
+  window_display_image(sprite_get_game_over(),
   0* SIZE_BLOC,0 * SIZE_BLOC);
 }
 
 int pause() {
   SDL_Event event;
-  window_clear();
+  //window_clear();
   pause_display();
   window_refresh();
   while(SDL_WaitEvent(&event)){
@@ -148,4 +148,42 @@ int pause() {
     }
   }
 return 0;
+}
+
+void game_over_display() {
+  window_display_image(sprite_get_game_over(),
+  0* SIZE_BLOC,0 * SIZE_BLOC);
+}
+
+struct game* gover(struct game* game) {
+  SDL_Event event;
+  //window_clear();
+  game_over_display();
+  window_refresh();
+  while(SDL_WaitEvent(&event)){
+    switch(event.type){
+      case SDL_QUIT:
+        return 1;
+      case SDL_KEYDOWN:
+      //end of pause
+        switch (event.key.keysym.sym) {
+          case  SDLK_n:
+          game_free(game);
+          game = game_new();
+
+          return game;
+          break;
+
+          case SDLK_ESCAPE:
+    			return 0;
+
+          default:
+          break;
+        }
+      break;
+      default:
+      break;
+    }
+  }
+return game;
 }

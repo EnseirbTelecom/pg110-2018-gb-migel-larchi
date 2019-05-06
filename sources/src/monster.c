@@ -97,10 +97,16 @@ static int monster_move_aux(struct monster* monster, struct map* map, int x, int
 	default:
 	break;
 	}
-
 	// Monster has moved
 	return 1;
 }
+
+static int monster_move_door(struct monster* monster, struct map* map, int x, int y) {
+	if (map_get_cell_type(map, x, y)==CELL_DOOR)
+		return 0;
+  else {return 1;}   
+}
+
 
 int monster_move(struct monster* monster, struct map* map) {
 	int x = monster->x;
@@ -109,28 +115,28 @@ int monster_move(struct monster* monster, struct map* map) {
 
 	switch (monster->direction) {
 	case NORTH:
-		if (monster_move_aux(monster, map, x, y - 1)) {
+		if (monster_move_aux(monster, map, x, y - 1) && monster_move_door(monster, map, x, y - 2)) {
 			monster->y--;
 			move = 1;
 		}
 		break;
 
 	case SOUTH:
-		if (monster_move_aux(monster, map, x, y + 1)) {
+		if (monster_move_aux(monster, map, x, y + 1) && monster_move_door(monster, map, x, y + 2)) {
 			monster->y++;
 			move = 1;
 		}
 		break;
 
 	case WEST:
-		if (monster_move_aux(monster, map, x - 1, y)) {
+		if (monster_move_aux(monster, map, x - 1, y) && monster_move_door(monster, map, x - 2, y)) {
 			monster->x--;
 			move = 1;
 		}
 		break;
 
 	case EAST:
-		if (monster_move_aux(monster, map, x + 1, y)) {
+		if (monster_move_aux(monster, map, x + 1, y) && monster_move_door(monster, map, x + 2, y)) {
 			monster->x++;
 			move = 1;
 		}
