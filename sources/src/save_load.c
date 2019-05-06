@@ -51,6 +51,13 @@ void save_map(FILE* file,struct map* map) {
   fprintf(file, ": %d ",height);
   unsigned char* grid = map_get_grid(map);
   for (int i = 0; i < width*height; i++) {
+    if ((grid[i]&CELL_BOMB)==CELL_BOMB || (grid[i]&CELL_EXPLOSION)==CELL_EXPLOSION)  {
+      if (grid[i]&0x0f) {
+        grid[i]=(grid[i]&0x0f)|CELL_BONUS;
+      }else{
+        grid[i] = CELL_EMPTY;
+      }
+    }
     fprintf(file, "%d ",grid[i]);
   }
   fputc('\n',file);
