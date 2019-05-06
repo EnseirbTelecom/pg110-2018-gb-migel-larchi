@@ -117,7 +117,7 @@ void open_the_door(struct game* game) {
 }
 
 void pause_display() {
-  window_display_image(sprite_get_game_over(),
+  window_display_image(sprite_get_pause_menu(),
   0* SIZE_BLOC,0 * SIZE_BLOC);
 }
 

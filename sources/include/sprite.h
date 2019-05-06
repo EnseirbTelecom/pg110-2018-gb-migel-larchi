@@ -19,6 +19,8 @@ SDL_Surface* sprite_get_tree();
 SDL_Surface* sprite_get_box();
 SDL_Surface* sprite_get_key();
 SDL_Surface* sprite_get_game_over();
+SDL_Surface* sprite_get_pause_menu();
+SDL_Surface* sprite_get_start_menu();
 SDL_Surface* sprite_get_stone();
 SDL_Surface* sprite_get_door_opened();
 SDL_Surface* sprite_get_door_closed();
