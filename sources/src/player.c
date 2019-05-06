@@ -50,7 +50,10 @@ void player_inc_life(struct player* player) {
 
 void player_dec_life(struct player *player){
 	assert(player);
-	player->life -=1;
+
+	if (player->life > 0) {
+		player->life -=1;
+	}
 }
 
 void player_set_position(struct player *player, int x, int y) {

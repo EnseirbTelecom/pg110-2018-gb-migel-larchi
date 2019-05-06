@@ -13,6 +13,9 @@
 #define MAP_KEY			"sprite/key.png"
 #define MAP_DOOR_OPENED	"sprite/door_opened.png"
 #define MAP_DOOR_CLOSED	"sprite/door_closed.png"
+#define GAME_OVER        "sprite/GAME_OVER.png"
+#define PAUSE_MENU        "sprite/PAUSE_MENU.png"
+#define START_MENU        "sprite/START_MENU.png"
 
 // Scenery elements
 #define MAP_STONE		"sprite/stone.png"
@@ -84,6 +87,15 @@ SDL_Surface* door_closed;
 SDL_Surface* stone;
 SDL_Surface* tree;
 
+// game over
+SDL_Surface* game_over;
+
+//pause menu
+SDL_Surface* pause_menu;
+
+//start menu
+SDL_Surface* start_menu;
+
 // bonus
 #define NB_BONUS 6
 SDL_Surface* bonus[NB_BONUS + 1];
@@ -133,6 +145,36 @@ static void banner_unload() {
 	SDL_FreeSurface(banner_range);
 	SDL_FreeSurface(banner_life);
 	SDL_FreeSurface(banner_flag);
+}
+
+static void game_over_load() {
+	// game over loading
+	game_over = image_load(GAME_OVER);
+}
+
+static void game_over_unload() {
+	// game over unloading
+	SDL_FreeSurface(game_over);
+}
+
+static void pause_menu_load() {
+	// pause menu loading
+	pause_menu = image_load(PAUSE_MENU);
+}
+
+static void pause_menu_unload() {
+	// pause menu unloading
+		SDL_FreeSurface(pause_menu);
+}
+
+static void start_menu_load() {
+	// start menu loading
+	start_menu = image_load(START_MENU);
+}
+
+static void start_menu_unload() {
+	// start menu unloading
+		SDL_FreeSurface(start_menu);
 }
 
 static void map_load() {
@@ -222,6 +264,9 @@ void sprite_load() {
 	banner_load();
 	player_load();
 	bomb_load();
+	game_over_load();
+	pause_menu_load();
+	start_menu_load();
 }
 
 void sprite_free() {
@@ -231,6 +276,9 @@ void sprite_free() {
 	banner_unload();
 	player_unload();
 	bomb_unload();
+	game_over_unload();
+	pause_menu_unload();
+	start_menu_unload();
 }
 
 SDL_Surface* sprite_get_number(short number) {
@@ -286,6 +334,21 @@ SDL_Surface* sprite_get_box() {
 SDL_Surface* sprite_get_key() {
 	assert(key);
 	return key;
+}
+
+SDL_Surface* sprite_get_game_over() {
+	assert(game_over);
+	return game_over;
+}
+
+SDL_Surface* sprite_get_pause_menu() {
+	assert(pause_menu);
+	return pause_menu;
+}
+
+SDL_Surface* sprite_get_start_menu() {
+	assert(start_menu);
+	return start_menu;
 }
 
 SDL_Surface* sprite_get_stone() {

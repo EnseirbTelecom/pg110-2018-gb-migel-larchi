@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 	while (!done) {
 		timer = SDL_GetTicks();
 
-		done = game_update(game);
+		done = game_update(&game);
 		game_display(game);
 
 		execution_speed = SDL_GetTicks() - timer;
@@ -48,5 +48,3 @@ int main(int argc, char *argv[]) {
 
 	return EXIT_SUCCESS;
 }
-
-

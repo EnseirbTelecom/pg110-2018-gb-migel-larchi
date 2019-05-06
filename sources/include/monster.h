@@ -22,7 +22,7 @@ void monster_set_current_way(struct monster *monster, enum direction direction);
 
 // Move the monster according to the current direction
 int monster_move(struct monster* monster, struct map* map);
-
+static int monster_move_door(struct monster* monster, struct map* map, int x, int y) ;
 void monster_death(struct monster* monster);
 // Display the monster on the screen
 void monster_display(struct monster* monster);
