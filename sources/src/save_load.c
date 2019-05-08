@@ -72,14 +72,7 @@ void save_maps(FILE* file, struct map** maps,int levels) {
 }
 
 void save_create(struct game* game) {
-  char name[255];
-  printf("Enter the save name (less than 250 character): \n");
-  scanf("%s", name);
-  char file_name[255];
-
-  sprintf(file_name,"save/%s.txt",name); //generate the file name: save/name.txt
-
-  FILE *file = fopen(file_name, "w");
+  FILE *file = fopen("save/saved.txt", "w");
   assert(file);
 
   // first line of save file

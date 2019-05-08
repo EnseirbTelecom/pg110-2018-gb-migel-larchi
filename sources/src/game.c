@@ -12,6 +12,7 @@
 #include <bomb_list.h>
 #include <monster_list.h>
 #include <myfonct.h>
+#include <save_load.h>
 
 struct game {
 	struct map** maps;       // the game's map
@@ -140,6 +141,7 @@ static short input_keyboard(struct game* game) {
 	int levels = game->levels;
 	int x = player_get_x(player);
 	int y = player_get_y(player);
+	int p;
 	int time;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -185,7 +187,12 @@ static short input_keyboard(struct game* game) {
 
 			case SDLK_p:
 				time = SDL_GetTicks();
-				pause();
+				p = pause();
+				if (p==2) {
+					save_create(game);
+				}else if (p==1) {
+					return 1;
+				}
 				maps_end_pause(game->maps,levels,time);
 				break;
 			default:

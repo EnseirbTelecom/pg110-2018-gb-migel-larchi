@@ -135,9 +135,12 @@ int pause() {
         switch (event.key.keysym.sym) {
           case  SDLK_p:
           return 0;
+          case  SDLK_s:
+
+          return 2;
 
           case SDLK_ESCAPE:
-    			return 0;
+    			return 1;
 
           default:
           break;
