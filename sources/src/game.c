@@ -207,10 +207,21 @@ static short input_keyboard(struct game* game) {
 
 int game_update(struct game** game) {
 	if (player_get_life((*game)->player)==0) {
-		*game=gover((*game));
-		player_inc_life((*game)->player);
-		return 0;
+		int etat = gover((*game));
+		if(etat==0){
+			free(*game);
+			(*game)=game_new();
+			return 0;
+		}else if (etat==2) {
+				free(*game);
+				(*game) =  load_save("./save/saved.txt");
+				return 0;
+		}else{
+			return 1;
+		}
+
 	}
+
 	struct map* map=game_get_current_map(*game);
 	//struct bomb_list** bomb_list=map_get_bombs(map);
 	player_update_state(map,(*game)->player);
