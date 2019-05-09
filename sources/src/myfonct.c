@@ -191,3 +191,45 @@ int gover(struct game* game) {
   }
 return 0;
 }
+
+void start_menu_display() {
+  window_display_image(sprite_get_start_menu(),
+  0* SIZE_BLOC,0 * SIZE_BLOC);
+}
+
+struct game* start_game(struct game* game) {
+  SDL_Event event;
+  //window_clear();
+  start_menu_display();
+  window_refresh();
+  while(SDL_WaitEvent(&event)){
+    switch(event.type){
+      case SDL_QUIT:
+        return 1;
+      case SDL_KEYDOWN:
+      //end of pause
+        switch (event.key.keysym.sym) {
+          case  SDLK_n:
+          return game;
+          break;
+
+          case  SDLK_l:
+          game_free(game);
+          game =  load_save("./save/saved.txt");
+
+          return game;
+          break;
+
+          case SDLK_ESCAPE:
+    			return 0;
+
+          default:
+          break;
+        }
+      break;
+      default:
+      break;
+    }
+  }
+return game;
+}

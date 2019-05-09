@@ -2,6 +2,7 @@
 #define MONSTER_H_
 #include <constant.h>
 #include <map.h>
+#include <player.h>
 
 struct monster;
 
@@ -26,8 +27,8 @@ static int monster_move_door(struct monster* monster, struct map* map, int x, in
 void monster_death(struct monster* monster);
 // Display the monster on the screen
 void monster_display(struct monster* monster);
-void monster_update(struct monster* monster, struct map* map, unsigned int speed);
-void monster_new_pos(struct monster* monster, struct map* map);
+void monster_update(struct monster* monster, struct player *player, struct map* map, unsigned int speed);
+void monster_new_pos(struct monster* monster, struct player *player, struct map* map);
 void monster_change_time(struct monster* monster,int time);
 
 #endif

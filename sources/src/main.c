@@ -3,6 +3,7 @@
  * Copyright (C) 2018 by Laurent Réveillère
  ******************************************************************************/
 #include <SDL/SDL.h>
+#include <SDL_audio.h>
 
 #include <constant.h>
 #include <game.h>
@@ -10,7 +11,7 @@
 #include <misc.h>
 #include <save_load.h>
 #include <sprite.h>
-
+#include <myfonct.h>
 
 int main(int argc, char *argv[]) {
 
@@ -20,9 +21,11 @@ int main(int argc, char *argv[]) {
 	}
 
 	struct game* game = game_new();
+	/*
 	game_free(game);
  	//game =  load_from_file("load.txt");
   game =  load_save("./save/saved.txt");
+	*/
 
 	window_create(SIZE_BLOC * STATIC_MAP_WIDTH,
 	SIZE_BLOC * STATIC_MAP_HEIGHT + BANNER_HEIGHT + LINE_HEIGHT);
@@ -32,6 +35,7 @@ int main(int argc, char *argv[]) {
 	// to obtain the DEFAULT_GAME_FPS, we have to reach a loop duration of (1000 / DEFAULT_GAME_FPS) ms
 	int ideal_speed = 1000 / DEFAULT_GAME_FPS;
 	int timer, execution_speed;
+	start_game(game);
 	// game loop
 	// static time rate implementation
 	int done = 0;

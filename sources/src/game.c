@@ -190,7 +190,8 @@ static short input_keyboard(struct game* game) {
 				p = pause();
 				if (p==2) {
 					save_create(game);
-				}else if (p==1) {
+				}
+				else if (p==1) {
 					return 1;
 				}
 				maps_end_pause(game->maps,levels,time);
@@ -225,7 +226,7 @@ int game_update(struct game** game) {
 	struct map* map=game_get_current_map(*game);
 	//struct bomb_list** bomb_list=map_get_bombs(map);
 	player_update_state(map,(*game)->player);
-	maps_update((*game)->maps,(*game)->levels);
+	maps_update((*game)->player,(*game)->maps,(*game)->levels);
 	if (input_keyboard((*game)))
 		return 1; // exit game
 

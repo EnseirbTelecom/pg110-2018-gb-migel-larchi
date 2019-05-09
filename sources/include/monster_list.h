@@ -15,7 +15,7 @@ void monster_init_map(struct map *map,struct monster_list* monster_list);
 void monster_list_add(struct monster_list *monster_list,int x,int y);
 
 //update position and direction of each monster in monster_list
-void monster_list_update(struct map *map);
+void monster_list_update(struct player *player, struct map *map);
 
 //display moonster
 void monster_list_display(struct monster_list* monster_list);

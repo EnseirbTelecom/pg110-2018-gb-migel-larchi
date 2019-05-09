@@ -5,6 +5,8 @@
 #ifndef MAP_H_
 #define MAP_H_
 
+#include <player.h>
+
 enum cell_type {
 	CELL_EMPTY=0x00,   		//  0000 0000				0
 	CELL_SCENERY=0x10, 		//  0001 0000				16
@@ -103,7 +105,7 @@ struct map* map_init(char* path_file);
 // init  a array of map  from a path of a directory and word_set_name
 struct map** maps_init(char* path_dir,char* word_set_name,int* levels);
 
-void maps_update(struct map** maps,int nb_lvl);
+void maps_update(struct player *player, struct map** maps,int nb_lvl);
 
 void map_open_the_door(struct map* map,int x,int y) ;
 
