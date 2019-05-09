@@ -50,7 +50,6 @@ int main(int argc, char *argv[]) {
 			SDL_Delay(ideal_speed - execution_speed); // we are ahead of ideal time. let's wait.
 	}
 	SDL_Quit();
-	save_create(game);
 	game_free(game);
 
 	return EXIT_SUCCESS;

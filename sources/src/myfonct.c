@@ -158,27 +158,28 @@ void game_over_display() {
   0* SIZE_BLOC,0 * SIZE_BLOC);
 }
 
-struct game* gover(struct game* game) {
+int gover(struct game* game) {
   SDL_Event event;
   //window_clear();
   game_over_display();
   window_refresh();
+
   while(SDL_WaitEvent(&event)){
     switch(event.type){
       case SDL_QUIT:
         return 1;
+
       case SDL_KEYDOWN:
       //end of pause
         switch (event.key.keysym.sym) {
           case  SDLK_n:
-          game_free(game);
-          game = game_new();
+          return 0;
 
-          return game;
-          break;
+          case  SDLK_l:
+          return 2;
 
           case SDLK_ESCAPE:
-    			return 0;
+    			return 1;
 
           default:
           break;
@@ -188,7 +189,7 @@ struct game* gover(struct game* game) {
       break;
     }
   }
-return game;
+return 0;
 }
 
 void start_menu_display() {
