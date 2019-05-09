@@ -194,6 +194,9 @@ static short input_keyboard(struct game* game) {
 				else if (p==1) {
 					return 1;
 				}
+				window_create(SIZE_BLOC*map_get_width(map)
+										 ,SIZE_BLOC*map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
+
 				maps_end_pause(game->maps,levels,time);
 				break;
 			default:
@@ -207,20 +210,9 @@ static short input_keyboard(struct game* game) {
 }
 
 int game_update(struct game** game) {
-	if (player_get_life((*game)->player)==0) {
-		int etat = gover((*game));
-		if(etat==0){
-			free(*game);
-			(*game)=game_new();
-			return 0;
-		}else if (etat==2) {
-				free(*game);
-				(*game) =  load_save("./save/saved.txt");
-				return 0;
-		}else{
-			return 1;
-		}
 
+	if (player_get_life((*game)->player)==0) {
+		return gover(game);
 	}
 
 	struct map* map=game_get_current_map(*game);
@@ -245,4 +237,8 @@ int game_get_current_lvl(struct game* game){
 void game_set_current_lvl(struct game* game,int lvl) {
 	assert(game);
 	game->level = lvl;
+	struct map* map = game_get_current_map(game);
+	window_create(SIZE_BLOC*map_get_width(map)
+	             ,SIZE_BLOC*map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
+
 }

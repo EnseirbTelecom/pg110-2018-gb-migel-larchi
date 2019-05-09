@@ -169,7 +169,6 @@ struct game* load_save(char* path_save){
   struct map** maps = load_maps(path_save,levels);
   struct player* player = load_player(path_save);
   struct game* game = game_load(maps,levels,level,player);
-
   return  game;
 }
 
@@ -188,5 +187,6 @@ struct game* load_from_file(char* path_save) {
   player_set_position(player,x,y);
 
   struct game* game = game_load(maps,levels,level,player);
+  struct map* map = game_get_current_map(game);
   return game;
 }

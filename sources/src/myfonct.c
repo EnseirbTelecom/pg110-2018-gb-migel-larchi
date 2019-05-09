@@ -7,9 +7,15 @@
 #include <sprite.h>
 #include <assert.h>
 #include <time.h>
+#include <save_load.h>
 
 #include <misc.h>
 #include <window.h>
+void resize_windows(struct map* map) {
+  window_create(SIZE_BLOC*map_get_width(map)
+              ,SIZE_BLOC*map_get_height(map) + BANNER_HEIGHT + LINE_HEIGHT);
+
+}
 int boxe_move(enum direction direction,struct map* map,int x,int y){
   int x1=x, y1=y;
   enum bonus_type bonus_type = map_get_bonus_type(map,x,y);
@@ -117,6 +123,7 @@ void open_the_door(struct game* game) {
 }
 
 void pause_display() {
+  window_create(GAME_PAUSE_WIDTH,GAME_PAUSE_HEIGHT);
   window_display_image(sprite_get_pause_menu(),
   0* SIZE_BLOC,0 * SIZE_BLOC);
 }
@@ -154,11 +161,12 @@ return 0;
 }
 
 void game_over_display() {
+  window_create(GAME_OVER_WIDTH,GAME_OVER_HEIGHT);
   window_display_image(sprite_get_game_over(),
   0* SIZE_BLOC,0 * SIZE_BLOC);
 }
 
-int gover(struct game* game) {
+int gover(struct game** game) {
   //return 0 = new game
   //return 1 = EXIT
   //return 2 = load
@@ -166,7 +174,7 @@ int gover(struct game* game) {
   //window_clear();
   game_over_display();
   window_refresh();
-
+  game_free(*game);
   while(SDL_WaitEvent(&event)){
     switch(event.type){
       case SDL_QUIT:
@@ -176,10 +184,16 @@ int gover(struct game* game) {
       //end of pause
         switch (event.key.keysym.sym) {
           case  SDLK_n:
+          (*game)=game_new();
+          resize_windows(game_get_current_map(*game));
           return 0;
+          break;
 
           case  SDLK_l:
-          return 2;
+          (*game)=load_save("./save/saved.txt");
+          resize_windows(game_get_current_map(*game));
+          return 0;
+          break;
 
           case SDLK_ESCAPE:
     			return 1;
@@ -192,10 +206,12 @@ int gover(struct game* game) {
       break;
     }
   }
-return 0;
+
+  return 0;
 }
 
 void start_menu_display() {
+  window_create(GAME_START_WIDTH,GAME_START_HEIGHT);
   window_display_image(sprite_get_start_menu(),
   0* SIZE_BLOC,0 * SIZE_BLOC);
 }

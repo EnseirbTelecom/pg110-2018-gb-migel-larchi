@@ -21,6 +21,15 @@
 #define STATIC_MAP_WIDTH  12
 #define STATIC_MAP_HEIGHT 12
 
+#define GAME_OVER_WIDTH 472
+#define GAME_OVER_HEIGHT 441
+
+#define GAME_PAUSE_WIDTH 472
+#define GAME_PAUSE_HEIGHT 441
+
+#define GAME_START_WIDTH 472
+#define GAME_START_HEIGHT 441
+
 enum direction {
 	NORTH = 0,
 	EAST,  // 1
