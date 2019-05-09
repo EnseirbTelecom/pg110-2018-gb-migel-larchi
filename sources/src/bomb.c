@@ -17,9 +17,9 @@ struct bomb{
   int x,y;
   int TIME;
   int range;
-  int exploded;
+  int exploded; // 0 pas exploser, 1 vient exploded, 2 au moin 2 bombe on exploser sur la map
   struct player* player;
-  int state;
+  int state; // 4 a 0: 1 a 4 =>longeur de la meche, 0 => explotion, -1 => a del
 };
 
 struct bomb* bomb_init(struct map* map,struct player* player){
@@ -82,7 +82,7 @@ void bomb_display(struct map *map,struct bomb *bomb){
   int x=bomb->x;
   int y=bomb->y;
   int state=bomb_get_state(bomb);
-  if (state != 0)
+  if (state >= 0)
     window_display_image(sprite_get_bomb(state),x* SIZE_BLOC,y* SIZE_BLOC);
 };
 
@@ -92,18 +92,19 @@ void bomb_update_state(struct map* map,struct bomb* bomb) {
   int x = bomb->x;
   int y = bomb->y;
   int currentTIME = SDL_GetTicks();
-  int TIME = currentTIME - bomb->TIME;
+  int DELAY = currentTIME - bomb->TIME;
 
   if (map_get_cell_type(map,x,y) == CELL_EXPLOSION
-      && bomb->state > 0) {
+      && bomb->state >0) {
+        //bomb na pas exploser => on change sont etat
     bomb->TIME = currentTIME;
     bomb->state = 0;
   } else {
-    if (TIME > STATEDELAY && bomb->state > 0) {
+    if (DELAY > STATEDELAY && bomb->state > 0) {
       bomb->TIME = currentTIME;
       bomb->state -= 1;
     }
-    else if(TIME > EXPDELAY && bomb->state == 0){
+    else if(DELAY > EXPDELAY && bomb->state == 0){
       bomb->state = -1;
     }
   }

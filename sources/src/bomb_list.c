@@ -42,7 +42,7 @@ void bomb_list_set_exploded_to_2(struct bomb_list *bomb_list){
 //set bomb->exploded from 1 to 2
   assert(bomb_list);
   while(bomb_list->bomb){
-    if (bomb_get_exploded(bomb_list->bomb)==1) {
+    if (bomb_get_exploded(bomb_list->bomb)!=0) {
       bomb_set_exploded(bomb_list->bomb,2);
     }
     bomb_list=bomb_list->next;
@@ -59,6 +59,7 @@ void bomb_list_clean(struct bomb_list** pbomb_list) {
     if (!bomb && bomb_list->next) {
       (*pbomb_list) = (*pbomb_list)->next;
       free(bomb_list);
+      bomb_list_clean(pbomb_list);
     }
 
     bomb_list = (*pbomb_list);
@@ -68,14 +69,13 @@ void bomb_list_clean(struct bomb_list** pbomb_list) {
     while (bomb_list != NULL) {
         bomb = bomb_list->bomb;
       if (bomb == NULL && bomb_list->next != NULL) {
-        prev->next = bomb_list->next;
-        free(bomb_list);
-        bomb_list = prev->next;
+          //bomb_list se termine toujour avec bomb=NULL et next=NULL
+          prev->next = bomb_list->next;
+          free(bomb_list);
+          bomb_list = prev->next;
       }else{
-        prev = bomb_list;
         bomb_list = bomb_list->next;
       }
-
     }
 }
 
@@ -115,7 +115,7 @@ void bomb_list_update(struct map *map, struct bomb_list** pbomb_list){
   bomb_list_clean(pbomb_list);
   if (need_to_refresh) {
     bomb_list_set_exploded_to_2(*pbomb_list);
-    bomb_list_aux(map,*pbomb_list);
+    bomb_list_aux(map,*pbomb_list);//meilleur affichage
   }
 }
 
