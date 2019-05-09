@@ -159,6 +159,9 @@ void game_over_display() {
 }
 
 int gover(struct game* game) {
+  //return 0 = new game
+  //return 1 = EXIT
+  //return 2 = load
   SDL_Event event;
   //window_clear();
   game_over_display();
