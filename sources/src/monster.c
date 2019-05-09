@@ -180,13 +180,13 @@ void monster_display(struct monster* monster) {
 			monster->x * SIZE_BLOC, monster->y * SIZE_BLOC);
 }
 
-void monster_update(struct monster* monster, struct map* map, unsigned int speed) {
+void monster_update(struct monster* monster, struct player *player, struct map* map, unsigned int speed) {
   unsigned int lastTime=monster->lastTime;
   unsigned int  currentTime;
   currentTime = SDL_GetTicks();
   if (currentTime > (lastTime + speed)) {
     monster->lastTime = currentTime;
-    monster_new_pos(monster,map);
+    monster_new_pos(monster,player,map);
   }
   int x=monster_get_x(monster);
   int y=monster_get_y(monster);
@@ -195,10 +195,63 @@ void monster_update(struct monster* monster, struct map* map, unsigned int speed
   }
 }
 
+/*
 void monster_new_pos(struct monster* monster, struct map* map) {
   	int random_number = rand();
     int random_move = random_number%4 ;
     switch (random_move) {
+      case 0:
+        monster_set_current_way(monster, NORTH);
+        monster_move(monster, map);
+        break;
+      case 1:
+        monster_set_current_way(monster, SOUTH);
+        monster_move(monster, map);
+        break;
+      case 2:
+        monster_set_current_way(monster, EAST);
+        monster_move(monster, map);
+        break;
+      case 3:
+        monster_set_current_way(monster, WEST);
+        monster_move(monster, map);
+        break;
+      }
+}
+*/
+
+void monster_new_pos(struct monster* monster,struct player* player, struct map* map) {
+  	int x_player=player_get_x(player);
+    int y_player=player_get_y(player);
+    int x_monster=monster_get_x(monster);
+    int y_monster=monster_get_y(monster);
+    int random_number = rand();
+    int random_dir = random_number%2 ;
+    if (x_player == x_monster) {
+      random_dir=1;
+    }
+    else if (y_player == y_monster) {
+      random_dir=0;
+    }
+    int mov_dir;
+    if (random_dir==0) {
+      if (x_player > x_monster) {
+        mov_dir=2;
+      }
+      else{
+        mov_dir=3;
+      }
+    }
+    else{
+      if (y_player > y_monster) {
+        mov_dir=1;
+      }
+      else{
+        mov_dir=0;
+      }
+    }
+
+    switch (mov_dir) {
       case 0:
         monster_set_current_way(monster, NORTH);
         monster_move(monster, map);

@@ -318,10 +318,10 @@ struct bomb_list** map_get_bombs(struct map* map){
 	return &(map->bombs);
 }
 
-void maps_update(struct map** maps,int nb_lvl) {
+void maps_update(struct player *player, struct map** maps,int nb_lvl) {
 	assert(maps);
 	for (int i = 0; i < nb_lvl; i++) {
-		monster_list_update(maps[i]);
+		monster_list_update(player, maps[i]);
 		bomb_list_update(maps[i],map_get_bombs(maps[i]));
 	}
 }
