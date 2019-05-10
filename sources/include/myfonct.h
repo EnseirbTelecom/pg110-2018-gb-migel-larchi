@@ -12,5 +12,5 @@ void open_the_door(struct game* game);
 
 int pause();
 int gover();
-start_menu_display();
+int you_win(struct game** game);
 struct game* start_game(struct game** game);

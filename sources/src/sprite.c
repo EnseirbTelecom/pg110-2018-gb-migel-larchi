@@ -20,7 +20,7 @@
 // Scenery elements
 #define MAP_STONE		"sprite/stone.png"
 #define MAP_TREE        "sprite/tree.png"
-
+#define MAP_PRINCESS        "sprite/bomberwoman.png"
 // Sprites of Banner
 #define BANNER_FLAG	"sprite/flag.png"
 #define BANNER_LINE		"sprite/banner_line.png"
@@ -86,6 +86,7 @@ SDL_Surface* door_opened;
 SDL_Surface* door_closed;
 SDL_Surface* stone;
 SDL_Surface* tree;
+SDL_Surface* princess;
 
 // game over
 SDL_Surface* game_over;
@@ -179,6 +180,7 @@ static void start_menu_unload() {
 
 static void map_load() {
 	// Sprite loading
+	princess = image_load(MAP_PRINCESS);
 	tree = image_load(MAP_TREE);
 	box = image_load(MAP_CASE);
 	key = image_load(MAP_KEY);
@@ -188,6 +190,7 @@ static void map_load() {
 }
 
 static void map_unload() {
+	SDL_FreeSurface(princess);
 	SDL_FreeSurface(tree);
 	SDL_FreeSurface(box);
 	SDL_FreeSurface(goal);
@@ -319,6 +322,11 @@ SDL_Surface* sprite_get_banner_range() {
 SDL_Surface* sprite_get_bonus(enum bonus_type bonus_type) {
 	assert(bonus[bonus_type]);
 	return bonus[bonus_type];
+}
+
+SDL_Surface* sprite_get_princess() {
+	assert(princess);
+	return princess;
 }
 
 SDL_Surface* sprite_get_tree() {
