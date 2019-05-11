@@ -216,7 +216,7 @@ void start_menu_display() {
   0* SIZE_BLOC,0 * SIZE_BLOC);
 }
 
-struct game* start_game(struct game* game) {
+int start_game(struct game** game) {
   SDL_Event event;
   //window_clear();
   start_menu_display();
@@ -229,18 +229,22 @@ struct game* start_game(struct game* game) {
       //end of pause
         switch (event.key.keysym.sym) {
           case  SDLK_n:
-          return game;
+          window_create(SIZE_BLOC*map_get_width(game_get_current_map(*game))
+  										 ,SIZE_BLOC*map_get_height(game_get_current_map(*game)) + BANNER_HEIGHT + LINE_HEIGHT);
+          return 0;
           break;
 
           case  SDLK_l:
-          game_free(game);
-          game =  load_save("./save/saved.txt");
+          game_free(*game);
+          *game =  load_save("./save/saved.txt");
+          window_create(SIZE_BLOC*map_get_width(game_get_current_map(*game))
+  										 ,SIZE_BLOC*map_get_height(game_get_current_map(*game)) + BANNER_HEIGHT + LINE_HEIGHT);
 
-          return game;
+          return 0;
           break;
 
           case SDLK_ESCAPE:
-    			return 0;
+    			return 1;
 
           default:
           break;
@@ -250,5 +254,5 @@ struct game* start_game(struct game* game) {
       break;
     }
   }
-return game;
+return 0;
 }

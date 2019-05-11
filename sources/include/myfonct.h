@@ -11,6 +11,6 @@ void door_move(struct game* game);
 void open_the_door(struct game* game);
 
 int pause();
-int gover();
+int gover(struct game** game);
 start_menu_display();
-struct game* start_game(struct game** game);
+int start_game(struct game** game);

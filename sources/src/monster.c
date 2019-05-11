@@ -227,11 +227,13 @@ void monster_new_pos(struct monster* monster,struct player* player, struct map* 
     int y_monster=monster_get_y(monster);
     int random_number = rand();
     int random_dir = random_number%2 ;
-    if (x_player == x_monster) {
+    if (x_player == x_monster && (monster_move_aux(monster, map, x_monster, y_monster+ 1)) && (monster_move_aux(monster, map, x_monster, y_monster - 1)) ) {
       random_dir=1;
+      printf("x\n");
     }
-    else if (y_player == y_monster) {
+    else if (y_player == y_monster && (monster_move_aux(monster, map, x_monster + 1, y_monster)) && (monster_move_aux(monster, map, x_monster - 1, y_monster)) ) {
       random_dir=0;
+      printf("y\n");
     }
     int mov_dir;
     if (random_dir==0) {
