@@ -349,3 +349,8 @@ void map_set_grid(struct map* map,unsigned char cell,int i) {
 	assert(map);
 	map->grid[i] = cell;
 }
+
+void map_set_monsters_speed(struct map* map,int speed){
+	assert(map);
+	monster_list_set_speed(map->monster_list,speed);
+}

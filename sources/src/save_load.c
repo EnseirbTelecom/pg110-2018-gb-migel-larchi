@@ -175,7 +175,9 @@ struct game* load_save(char* path_save){
 struct game* load_from_file(char* path_save) {
   FILE* fichier = fopen(path_save,"r");
 
-  int levels = fgetc(fichier);
+  int levels;
+  fscanf(fichier,"%d",&levels);
+  go_to_next_line(fichier);
 
   int level,x,y;
   fscanf(fichier,"%d:%d,%d",&level,&x,&y);
@@ -185,8 +187,7 @@ struct game* load_from_file(char* path_save) {
   struct map** maps = maps_init("./map","easy",&levels);
   struct player* player = player_init(3);
   player_set_position(player,x,y);
-
+  player_set_range(player, 1);
   struct game* game = game_load(maps,levels,level,player);
-  struct map* map = game_get_current_map(game);
   return game;
 }

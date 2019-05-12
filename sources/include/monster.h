@@ -8,11 +8,13 @@ struct monster;
 
 // Creates a new monster
 struct monster* monster_init();
+//set the monster speed;
+void  monster_set_speed(struct monster* monster,int speed);
+int monster_get_speed(struct monster* monster);
 void monster_free();
 
 // Set the position of the monster
 void monster_set_position(struct monster *monster, int x, int y);
-
 // Returns the current position of the monster
 int monster_get_x(struct monster* monster);
 int monster_get_y(struct monster* monster);

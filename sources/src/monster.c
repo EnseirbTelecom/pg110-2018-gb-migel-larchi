@@ -14,17 +14,27 @@ struct monster{
   int x,y;
   unsigned int lastTime;
   enum direction direction;
+  int speed;
 };
 
+void  monster_set_speed(struct monster* monster,int speed) {
+  assert(monster);
+  monster->speed=speed;
+}
 struct monster* monster_init() {
 	struct monster* monster = malloc(sizeof(*monster));
 	if (!monster)
 		error("Memory error");
   monster->direction = SOUTH;
   monster->lastTime=SDL_GetTicks();
+  monster->speed=1000;
 	return monster;
 }
 
+int monster_get_speed(struct monster* monster){
+  assert(monster);
+  return monster->speed;
+}
 void monster_set_position(struct monster *monster, int x, int y) {
 	assert(monster);
 	monster->x = x;
