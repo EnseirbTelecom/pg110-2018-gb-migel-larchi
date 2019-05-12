@@ -34,11 +34,11 @@ int main(int argc, char *argv[]) {
 
 	// to obtain the DEFAULT_GAME_FPS, we have to reach a loop duration of (1000 / DEFAULT_GAME_FPS) ms
 	int ideal_speed = 1000 / DEFAULT_GAME_FPS;
-	int timer, execution_speed;
+	int timer, execution_speed,done;
 
 	// game loop
 	// static time rate implementation
-	int done = start_game(&game);
+	done = start_game(&game);
 	while (!done) {
 		timer = SDL_GetTicks();
 
