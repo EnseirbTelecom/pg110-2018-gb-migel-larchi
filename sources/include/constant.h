@@ -30,6 +30,11 @@
 #define GAME_START_WIDTH 472
 #define GAME_START_HEIGHT 441
 
+#define MONSTER_MAX_SPEED 200
+#define MONSTER_MIN_SPEED 1000
+
+
+
 enum direction {
 	NORTH = 0,
 	EAST,  // 1

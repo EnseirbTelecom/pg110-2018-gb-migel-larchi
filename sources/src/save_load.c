@@ -181,7 +181,6 @@ struct game* load_from_file(char* path_save) {
 
   int level,x,y;
   fscanf(fichier,"%d:%d,%d",&level,&x,&y);
-  printf("%d %d %d %d\n",levels,level,x,y );
 
   char prefix[255];
   fgets(prefix,255,fichier);

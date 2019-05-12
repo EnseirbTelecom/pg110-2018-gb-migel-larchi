@@ -1,4 +1,5 @@
 #ifndef MAP_FILE_H
+#define MAP_FILE_H
 
 // get width of a map from file
 int map_file_get_width(char* dir);
@@ -18,5 +19,4 @@ char* get_file_path(char* char1,char* char2);
 //get the level from file name
 int map_file_get_lvl(char* path);
 
-#define MAP_FILE_H
 #endif

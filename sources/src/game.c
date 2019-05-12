@@ -13,6 +13,7 @@
 #include <monster_list.h>
 #include <myfonct.h>
 #include <save_load.h>
+#include <map.h>
 
 struct game {
 	struct map** maps;       // the game's map
@@ -210,16 +211,19 @@ static short input_keyboard(struct game* game) {
 }
 
 int game_update(struct game** game) {
-
+	// game over
 	if (player_get_life((*game)->player)==0) {
 		return gover(game);
 	}
 
-
+	//win situation
 	struct map* map=game_get_current_map(*game);
 	if(map_get_cell_type(map,player_get_x((*game)->player),player_get_y((*game)->player))==CELL_SCENERY)
 		return you_win(game);
-	//struct bomb_list** bomb_list=map_get_bombs(map);
+
+
+	int speed = (game_get_current_lvl(*game))*((MONSTER_MAX_SPEED-MONSTER_MIN_SPEED)/(game_get_levels(*game)-1))+MONSTER_MIN_SPEED;
+	map_set_monsters_speed(map,speed);
 	player_update_state(map,(*game)->player);
 	maps_update((*game)->player,(*game)->maps,(*game)->levels);
 	if (input_keyboard((*game)))

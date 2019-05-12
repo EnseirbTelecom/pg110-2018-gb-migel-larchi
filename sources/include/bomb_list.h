@@ -1,3 +1,6 @@
+#ifndef BOMBL_
+#define  BOMBL_
+
 #include <player.h>
 #include <bomb.h>
 
@@ -24,3 +27,4 @@ void bomb_list_set_exploded_to_2(struct bomb_list *bomb_list,int exploded);
 void bomb_list_update(struct map *map, struct bomb_list** pbomb_list);
 
 void bomb_list_change_time(struct bomb_list* bomb_list,int time);
+#endif

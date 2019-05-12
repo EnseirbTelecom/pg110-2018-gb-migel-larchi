@@ -113,5 +113,8 @@ void maps_end_pause(struct map** map, int levels,int time);
 
 void map_set_grid(struct map* map,unsigned char cell,int i);
 
+//set the speed of all monsters in the map
+void monster_list_set_speed(struct monster_list* monster_list,int speed);
+
 
 #endif /* MAP_H_ */

@@ -27,4 +27,7 @@ int monster_list_del_monster(struct monster_list** monster_list,int x,int y);
 
 void monster_list_change_time(struct monster_list* monster_list,int time);
 
+//change de speed of all the monsters of monster_list
+void monster_list_set_speed(struct monster_list* monster_list,int speed);
+
 #endif
