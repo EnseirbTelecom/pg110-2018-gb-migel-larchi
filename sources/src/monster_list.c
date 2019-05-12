@@ -57,13 +57,13 @@ void monster_list_add(struct monster_list *monster_list,int x,int y) {
 }
 
 void monster_list_update(struct player *player, struct map *map) {
+  //monster->last_time=0 alors le monstre est mort
   assert(map);
   struct monster_list** pmonster_list=map_get_monster_list(map);
   struct monster_list* monster_list=*pmonster_list;
 
   while (monster_list->monster!=NULL) {
     monster_update(monster_list->monster,player,map,monster_get_speed(monster_list->monster));
-    printf("speed: %d\n", monster_get_speed(monster_list->monster));
     if (monster_get_lastTime(monster_list->monster)==0) {
       int x = monster_get_x(monster_list->monster);
       int y = monster_get_y(monster_list->monster);

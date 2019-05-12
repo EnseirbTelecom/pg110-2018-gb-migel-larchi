@@ -19,7 +19,7 @@ struct monster{
 
 void  monster_set_speed(struct monster* monster,int speed) {
   assert(monster);
-  monster->speed;
+  monster->speed=speed;
 }
 struct monster* monster_init() {
 	struct monster* monster = malloc(sizeof(*monster));

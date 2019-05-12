@@ -14,6 +14,7 @@
 #include <myfonct.h>
 #include <save_load.h>
 #include <map.h>
+#include <constant.h>
 
 struct game {
 	struct map** maps;       // the game's map
