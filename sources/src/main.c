@@ -21,9 +21,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	struct game* game = game_new();
-	/*
 	game_free(game);
- 	//game =  load_from_file("load.txt");
+	game =  load_from_file("load.txt");
+	/*
   game =  load_save("./save/saved.txt");
 	*/
 
