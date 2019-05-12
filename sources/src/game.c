@@ -215,7 +215,10 @@ int game_update(struct game** game) {
 		return gover(game);
 	}
 
+
 	struct map* map=game_get_current_map(*game);
+	if(map_get_cell_type(map,player_get_x((*game)->player),player_get_y((*game)->player))==CELL_SCENERY)
+		return you_win(game);
 	//struct bomb_list** bomb_list=map_get_bombs(map);
 	player_update_state(map,(*game)->player);
 	maps_update((*game)->player,(*game)->maps,(*game)->levels);

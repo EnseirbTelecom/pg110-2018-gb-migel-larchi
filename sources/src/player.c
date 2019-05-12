@@ -172,6 +172,8 @@ static int player_move_aux(struct player* player, struct map* map, int x, int y)
 
 	switch (map_get_cell_type(map, x, y)) {
 	case CELL_SCENERY:
+		if(map_get_bonus_type(map,x,y)==4) //4 = princess
+			return 1;
 		return 0;		// Les mouvements du joueur sont limités les éléments de décors
 		break;
 
@@ -237,12 +239,6 @@ int player_move(struct player* player, struct map* map) {
 		}
 		break;
 	}
-/*
-	if (move && (map_get_cell_type(map,x,y)!=CELL_BOMB)
-					&& map_get_cell_type(map,x,y)!=CELL_EXPLOSION) {
-		//apres pose de la bomb puis deplacement la bombe ne disparait pas
-		map_set_cell_type(map, x, y, CELL_EMPTY);
-	}*/
 	return move;
 }
 

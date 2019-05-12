@@ -256,3 +256,53 @@ int start_game(struct game** game) {
   }
 return 0;
 }
+
+void you_win_display() {
+  window_create(GAME_OVER_WIDTH,GAME_OVER_HEIGHT);
+  window_display_image(sprite_get_game_over(),
+  0* SIZE_BLOC,0 * SIZE_BLOC);
+}
+
+int you_win(struct game** game) {
+  //return 0 = new game
+  //return 1 = EXIT
+  //return 2 = load
+  SDL_Event event;
+  //window_clear();
+  you_win_display();
+  window_refresh();
+  game_free(*game);
+  while(SDL_WaitEvent(&event)){
+    switch(event.type){
+      case SDL_QUIT:
+        return 1;
+
+      case SDL_KEYDOWN:
+      //end of pause
+        switch (event.key.keysym.sym) {
+          case  SDLK_n:
+          (*game)=game_new();
+          resize_windows(game_get_current_map(*game));
+          return 0;
+          break;
+
+          case  SDLK_l:
+          (*game)=load_save("./save/saved.txt");
+          resize_windows(game_get_current_map(*game));
+          return 0;
+          break;
+
+          case SDLK_ESCAPE:
+    			return 1;
+
+          default:
+          break;
+        }
+      break;
+      default:
+      break;
+    }
+  }
+
+  return 0;
+}

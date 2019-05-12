@@ -20,6 +20,7 @@ struct bomb{
   int exploded; // 0 pas exploser, 1 vient exploded, 2 au moin 2 bombe on exploser sur la map
   struct player* player;
   int state; // 4 a 0: 1 a 4 =>longeur de la meche, 0 => explotion, -1 => a del
+  int rn,rs,re,rw; //la range range sur les 4 directions
 };
 
 struct bomb* bomb_init(struct map* map,struct player* player){
@@ -39,6 +40,10 @@ struct bomb* bomb_init(struct map* map,struct player* player){
   bomb->player=player;
   bomb->range=player_get_range(player);
   bomb->state=4;
+   bomb->rn=1;
+   bomb->rs=1;
+   bomb->re=1;
+   bomb->rw=1;
   return bomb;
 };
 
@@ -109,25 +114,7 @@ void bomb_update_state(struct map* map,struct bomb* bomb) {
     }
   }
 }
-
-void bomb_update(struct map* map,struct bomb* bomb){
-  assert(map);
-  assert(bomb);
-  bomb_update_state(map,bomb);
-  int state = bomb_get_state(bomb);
-  if(state==0 && (bomb->exploded)==0){
-    //si la bombe vient exploser
-    bomb_explosion_map_set(map,bomb);
-    bomb->exploded=1;
-  }else if (state == 0 && (bomb->exploded)==2) {
-    //si une bombe vient de finir d'exploser, on rafraichie toutes les explosions
-    bomb_explosion_map_set(map,bomb);
-  }else if (state < 0) {
-    bomb_explosion_end(map,bomb);
-    player_inc_nb_bomb(bomb->player);
-  }
-}
-
+/*
 int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
     enum cell_type cell_type = map_get_cell_type(map,x,y);
     enum bonus_type bonus_type=map_get_bonus_type(map,x,y);
@@ -160,7 +147,7 @@ int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
     case CELL_BOX:
       map_set_cell_type(map,x,y,CELL_EXPLOSION);
       map_set_bonus_type(map,x,y,bonus_type);
-      return 0;
+      return 2;
       break;
 
     default:
@@ -168,10 +155,11 @@ int bomb_explosion_map_set_cell(struct map *map,int x,int y) {
     }
   return 0;
 }
+*/
 
 int bomb_explosion_map_set_cell_2(struct map *map,int x,int y) {
     enum cell_type cell_type = map_get_cell_type(map,x,y);
-
+    enum bonus_type bonus_type = map_get_bonus_type(map,x,y);
     switch (cell_type) {
       case CELL_EMPTY:
         map_set_cell_type(map,x,y,CELL_EXPLOSION);
@@ -183,182 +171,189 @@ int bomb_explosion_map_set_cell_2(struct map *map,int x,int y) {
         return 1;
         break;
 
-      case CELL_EXPLOSION:
-        return 1;
-      break;
-
-      case CELL_BOMB:
-        return 1;
-        break;
-
       default: return 0;
     }
 }
 
+int bomb_explosion_map_set_aux(struct map *map,int x,int y){
+  //retourne int!=0 si explosion peut continuer de se propager
+  enum cell_type cell_type = map_get_cell_type(map,x,y);
+
+  switch (cell_type) {
+    case CELL_EMPTY: return 1;
+    case CELL_BONUS: return 1;
+    case CELL_MONSTER: return 1;
+    case CELL_EXPLOSION: return 1;
+    case CELL_BOMB: return 1;
+    case CELL_BOX: return 2;
+    default:return 0;;
+  }
+}
 void bomb_explosion_map_set(struct map* map,struct bomb* bomb){
-
   int x=bomb->x;
   int y=bomb->y;
   int range=bomb->range;
-
-  int xi=x+1;
-  int x_i=x-1;
-  int yi=y+1;
-  int y_i=y-1;
-  map_set_cell_type(map,x,y,CELL_EXPLOSION);
-  if (bomb_get_exploded(bomb)==0) {
-    int i=0;
-    while (i<range) {
-      if(map_is_inside(map,x,yi) && bomb_explosion_map_set_cell(map,x,yi)){
-        yi++;
-        i++;
-      }else{
+  int value;
+  enum bonus_type bonus_type=map_get_bonus_type(map,x,y);
+  for (int i = 1; i < range+1; i++) {
+    y--;
+    if (map_is_inside(map,x,y)) {
+      value=bomb_explosion_map_set_aux(map,x,y);
+      if(value ==1){
+        map_set_cell_type(map,x,y,CELL_EXPLOSION);
+        (bomb->rn)++;
+      }else if (value ==2) {
+        bonus_type=map_get_bonus_type(map,x,y);
+        map_set_cell_type(map,x,y,CELL_EXPLOSION);
+        map_set_bonus_type(map,x,y,bonus_type);
+        (bomb->rn)++;
         break;
-      }
-    }
-
-    i=0;
-    while (i<range) {
-      if(map_is_inside(map,x,y_i) && bomb_explosion_map_set_cell(map,x,y_i)){
-        y_i--;
-        i++;
-      }else{
-        break;
-      }
-    }
-
-    i=0;
-    while (i<range) {
-      if(map_is_inside(map,xi,y) && bomb_explosion_map_set_cell(map,xi,y)){
-        xi++;
-        i++;
-      }else{
-        break;
-      }
-    }
-
-    i=0;
-    while (i<range) {
-      if(map_is_inside(map,x_i,y) && bomb_explosion_map_set_cell(map,x_i,y)){
-        x_i--;
-        i++;
-      }else{
-        break;
-      }
-    }
-  }
-  else if (bomb_get_exploded(bomb)==2) {
-    int i=0;
-    while (i<range) {
-      if(map_is_inside(map,x,yi) && bomb_explosion_map_set_cell_2(map,x,yi)){
-        yi++;
-        i++;
-      }else{
-        break;
-      }
-    }
-
-    i=0;
-    while (i<range) {
-      if(map_is_inside(map,x,y_i) && bomb_explosion_map_set_cell_2(map,x,y_i)){
-        y_i--;
-        i++;
-      }else{
-        break;
-      }
-    }
-
-    i=0;
-    while (i<range) {
-      if(map_is_inside(map,xi,y) && bomb_explosion_map_set_cell_2(map,xi,y)){
-        xi++;
-        i++;
-      }else{
-        break;
-      }
-    }
-
-    i=0;
-    while (i<range) {
-      if(map_is_inside(map,x_i,y) && bomb_explosion_map_set_cell_2(map,x_i,y)){
-        x_i--;
-        i++;
       }else{
         break;
       }
     }
   }
 
-};
+  x=bomb->x;
+  y=bomb->y;
+  for (int i = 1; i < range+1; i++) {
+    y++;
+    if (map_is_inside(map,x,y)) {
+      value=bomb_explosion_map_set_aux(map,x,y);
+      if(value ==1){
+        map_set_cell_type(map,x,y,CELL_EXPLOSION);
+        (bomb->rs)++;
+      }else if (value ==2) {
+        bonus_type=map_get_bonus_type(map,x,y);
+        map_set_cell_type(map,x,y,CELL_EXPLOSION);
+        map_set_bonus_type(map,x,y,bonus_type);
+        (bomb->rs)++;
+        break;
+      }else{
+        break;
+      }
+    }else{
+      break;
+    }
+  }
 
-void bomb_explosion_end(struct map *map,struct bomb* bomb){
+  x=bomb->x;
+  y=bomb->y;
+  for (int i = 1; i < range+1; i++) {
+      x++;
+      if (map_is_inside(map,x,y)) {
+        value=bomb_explosion_map_set_aux(map,x,y);
+        if(value ==1){
+          map_set_cell_type(map,x,y,CELL_EXPLOSION);
+          (bomb->re)++;
+        }
+        else if (value ==2) {
+          bonus_type=map_get_bonus_type(map,x,y);
+          map_set_cell_type(map,x,y,CELL_EXPLOSION);
+          map_set_bonus_type(map,x,y,bonus_type);
+          (bomb->re)++;
+          break;
+        }else{
+          break;
+        }
+      }else{
+        break;
+      }
+  }
+
+  x=bomb->x;
+  y=bomb->y;
+  for (int i = 1; i < range+1; i++) {
+    x--;
+    if (map_is_inside(map,x,y)) {
+      value=bomb_explosion_map_set_aux(map,x,y);
+      if(value ==1){
+        map_set_cell_type(map,x,y,CELL_EXPLOSION);
+        (bomb->rw)++;
+      }
+      else if (value ==2) {
+        bonus_type=map_get_bonus_type(map,x,y);
+        map_set_cell_type(map,x,y,CELL_EXPLOSION);
+        map_set_bonus_type(map,x,y,bonus_type);
+        (bomb->rw)++;
+        break;
+      }else{
+        break;
+      }
+    }else{
+      break;
+    }
+  }
+
+
+}
+
+void bomb_explosion_map_set_2(struct map* map,struct bomb* bomb){
+  assert (map);
   assert(bomb);
-  assert(map);
-
   int x=bomb->x;
   int y=bomb->y;
-  int range=bomb->range;
-
-  int xi=x+1;
-  int x_i=x-1;
-  int yi=y+1;
-  int y_i=y-1;
   map_set_cell_type(map,x,y,CELL_EMPTY);
-  for ( int i=0 ; i < range; i++) {
-    if(map_is_inside(map,x,yi) && (map_get_cell_type(map,x,yi)==CELL_EXPLOSION
-      || map_get_cell_type(map,x,yi)==CELL_BOMB
-      || map_get_cell_type(map,x,yi)==CELL_EMPTY)){
-      enum bonus_type bonus_type=map_get_bonus_type(map,x,yi);
-      if (bonus_type) {
-        map_set_cell_type(map,x,yi,CELL_BONUS);
-        map_set_bonus_type(map,x,yi,bonus_type);
-      }else{
-        map_set_cell_type(map,x,yi,CELL_EMPTY);
-      }
-      yi++;
-    }
-
-    if(map_is_inside(map,xi,y) && (map_get_cell_type(map,xi,y)==CELL_EXPLOSION
-    || map_get_cell_type(map,xi,y)==CELL_BOMB
-    || map_get_cell_type(map,xi,y)==CELL_EMPTY)){
-      enum bonus_type bonus_type=map_get_bonus_type(map,xi,y);
-      if (bonus_type) {
-        map_set_cell_type(map,xi,y,CELL_BONUS);
-        map_set_bonus_type(map,xi,y,bonus_type);
-      }else{
-        map_set_cell_type(map,xi,y,CELL_EMPTY);
-      }
-      xi++;
-    }
-
-    if(map_is_inside(map,x,y_i) && (map_get_cell_type(map,x,y_i)==CELL_EXPLOSION
-    || map_get_cell_type(map,x,y_i)==CELL_BOMB
-    || map_get_cell_type(map,x,y_i)==CELL_EMPTY)){
-      enum bonus_type bonus_type=map_get_bonus_type(map,x,y_i);
-      if (bonus_type) {
-        map_set_cell_type(map,x,y_i,CELL_BONUS);
-        map_set_bonus_type(map,x,y_i,bonus_type);
-      }else{
-        map_set_cell_type(map,x,y_i,CELL_EMPTY);
-      }
-
-      y_i--;
-    }
-    if(map_is_inside(map,x_i,y) && (map_get_cell_type(map,x_i,y)==CELL_EXPLOSION
-    || map_get_cell_type(map,x_i,y)==CELL_BOMB
-    || map_get_cell_type(map,x_i,y)==CELL_EMPTY)){
-      enum bonus_type bonus_type=map_get_bonus_type(map,x_i,y);
-      if (bonus_type) {
-        map_set_cell_type(map,x_i,y,CELL_BONUS);
-        map_set_bonus_type(map,x_i,y,bonus_type);
-      }else{
-        map_set_cell_type(map,x_i,y,CELL_EMPTY);
-      }
-      x_i--;
-    }
+  for (int i = 1; i < (bomb->rn); i++) {
+    bomb_explosion_map_set_cell_2(map,x,y-i);
   }
-};
+  for (int i = 1; i < (bomb->rs); i++) {
+    bomb_explosion_map_set_cell_2(map,x,y+i);
+  }
+  for (int i = 1; i < (bomb->re); i++) {
+    bomb_explosion_map_set_cell_2(map,x+i,y);
+  }
+  for (int i = 1; i < (bomb->rw); i++) {
+    bomb_explosion_map_set_cell_2(map,x-i,y);
+  }
+}
 
+void bomb_explosion_end_aux(struct map* map, int x, int y) {
+    enum bonus_type bonus_type=map_get_bonus_type(map,x,y);
+    if (bonus_type) {
+      map_set_cell_type(map,x,y,CELL_BONUS);
+      map_set_bonus_type(map,x,y,bonus_type);
+    }else{
+      map_set_cell_type(map,x,y,CELL_EMPTY);
+    }
+}
+
+void bomb_explosion_end(struct map *map,struct bomb* bomb) {
+  int x=bomb->x;
+  int y=bomb->y;
+  map_set_cell_type(map,x,y,CELL_EMPTY);
+  for (int i = 1; i < (bomb->rn); i++) {
+    bomb_explosion_end_aux(map,x,y-i);
+  }
+  for (int i = 1; i < (bomb->rs); i++) {
+    bomb_explosion_end_aux(map,x,y+i);
+  }
+  for (int i = 1; i < (bomb->re); i++) {
+    bomb_explosion_end_aux(map,x+i,y);
+  }
+  for (int i = 1; i < (bomb->rw); i++) {
+    bomb_explosion_end_aux(map,x-i,y);
+  }
+}
+
+void bomb_update(struct map* map,struct bomb* bomb){
+  assert(map);
+  assert(bomb);
+  bomb_update_state(map,bomb);
+  int state = bomb_get_state(bomb);
+  if(state==0 && (bomb->exploded)==0){
+    //si la bombe vient exploser
+    bomb_explosion_map_set(map,bomb);
+    bomb->exploded=1;
+  }else if (state == 0 && (bomb->exploded)==2) {
+    //si une bombe vient de finir d'exploser, on rafraichie toutes les explosions
+    bomb_explosion_map_set_2(map,bomb);
+    (bomb->exploded)=1;
+  }else if (state < 0) {
+    bomb_explosion_end(map,bomb);
+    player_inc_nb_bomb(bomb->player);
+  }
+}
 
 void bomb_change_time(struct bomb* bomb,int time) {
   assert(bomb);
