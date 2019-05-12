@@ -220,6 +220,7 @@ int start_game(struct game** game) {
   SDL_Event event;
   //window_clear();
   start_menu_display();
+  printf("okokok\n");
   window_refresh();
   while(SDL_WaitEvent(&event)){
     switch(event.type){
