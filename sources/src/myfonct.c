@@ -8,7 +8,6 @@
 #include <assert.h>
 #include <time.h>
 #include <save_load.h>
-
 #include <misc.h>
 #include <window.h>
 void resize_windows(struct map* map) {
@@ -184,7 +183,7 @@ int gover(struct game** game) {
       //end of pause
         switch (event.key.keysym.sym) {
           case  SDLK_n:
-          (*game)=game_new();
+          (*game)=load_from_file("./load.txt");
           resize_windows(game_get_current_map(*game));
           return 0;
           break;
@@ -281,7 +280,7 @@ int you_win(struct game** game) {
         switch (event.key.keysym.sym) {
           case  SDLK_n:
           game_free(*game);
-          (*game)=game_new();
+          (*game)=load_from_file("./load.txt");
           resize_windows(game_get_current_map(*game));
           return 0;
           break;

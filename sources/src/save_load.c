@@ -10,7 +10,11 @@
 #include <bomb_list.h>
 #include <monster_list.h>
 #include <myfonct.h>
+#include <save_load.h>
+
 #include <stdlib.h>
+#include <unistd.h>
+
 
 void go_to_next_line(FILE* file){
   int foo = fgetc(file);
@@ -164,12 +168,17 @@ void  load_lvl_s(char* path_save,int* levels,int* level ) {
 }
 
 struct game* load_save(char* path_save){
-  int level,levels;
-  load_lvl_s(path_save,&levels,&level);
-  struct map** maps = load_maps(path_save,levels);
-  struct player* player = load_player(path_save);
-  struct game* game = game_load(maps,levels,level,player);
-  return  game;
+  if( access( path_save, F_OK ) != -1 ) { // on verifie que le fichier existe
+    int level,levels;
+    load_lvl_s(path_save,&levels,&level);
+    struct map** maps = load_maps(path_save,levels);
+    struct player* player = load_player(path_save);
+    struct game* game = game_load(maps,levels,level,player);
+    return  game;
+  } else {
+      printf("pas de sauvegaude\n" );
+      return load_from_file("./load.txt");
+  }
 }
 
 struct game* load_from_file(char* path_save) {
