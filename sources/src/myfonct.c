@@ -259,7 +259,7 @@ return 0;
 
 void you_win_display() {
   window_create(GAME_OVER_WIDTH,GAME_OVER_HEIGHT);
-  window_display_image(sprite_get_game_over(),
+  window_display_image(sprite_get_win_menu(),
   0* SIZE_BLOC,0 * SIZE_BLOC);
 }
 

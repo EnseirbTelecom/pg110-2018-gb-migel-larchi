@@ -16,6 +16,7 @@
 #define GAME_OVER        "sprite/GAME_OVER.png"
 #define PAUSE_MENU        "sprite/PAUSE_MENU.png"
 #define START_MENU        "sprite/START_MENU.png"
+#define WIN_MENU        "sprite/WIN_MENU.png"
 
 // Scenery elements
 #define MAP_STONE		"sprite/stone.png"
@@ -97,6 +98,9 @@ SDL_Surface* pause_menu;
 //start menu
 SDL_Surface* start_menu;
 
+//win menu
+SDL_Surface* win_menu;
+
 // bonus
 #define NB_BONUS 6
 SDL_Surface* bonus[NB_BONUS + 1];
@@ -176,6 +180,16 @@ static void start_menu_load() {
 static void start_menu_unload() {
 	// start menu unloading
 		SDL_FreeSurface(start_menu);
+}
+
+static void win_menu_load() {
+	// win menu loading
+	win_menu = image_load(WIN_MENU);
+}
+
+static void win_menu_unload() {
+	// win menu unloading
+		SDL_FreeSurface(win_menu);
 }
 
 static void map_load() {
@@ -270,6 +284,7 @@ void sprite_load() {
 	game_over_load();
 	pause_menu_load();
 	start_menu_load();
+	win_menu_load();
 }
 
 void sprite_free() {
@@ -282,6 +297,7 @@ void sprite_free() {
 	game_over_unload();
 	pause_menu_unload();
 	start_menu_unload();
+	win_menu_unload();
 }
 
 SDL_Surface* sprite_get_number(short number) {
@@ -357,6 +373,11 @@ SDL_Surface* sprite_get_pause_menu() {
 SDL_Surface* sprite_get_start_menu() {
 	assert(start_menu);
 	return start_menu;
+}
+
+SDL_Surface* sprite_get_win_menu() {
+	assert(win_menu);
+	return win_menu;
 }
 
 SDL_Surface* sprite_get_stone() {
