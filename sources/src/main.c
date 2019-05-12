@@ -40,7 +40,6 @@ int main(int argc, char *argv[]) {
 
 		game_display(game);
 		done = game_update(&game);
-
 		execution_speed = SDL_GetTicks() - timer;
 		if (execution_speed < ideal_speed)
 			SDL_Delay(ideal_speed - execution_speed); // we are ahead of ideal time. let's wait.

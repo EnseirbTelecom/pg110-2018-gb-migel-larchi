@@ -271,7 +271,6 @@ int you_win(struct game** game) {
   //window_clear();
   you_win_display();
   window_refresh();
-  game_free(*game);
   while(SDL_WaitEvent(&event)){
     switch(event.type){
       case SDL_QUIT:
@@ -281,12 +280,14 @@ int you_win(struct game** game) {
       //end of pause
         switch (event.key.keysym.sym) {
           case  SDLK_n:
+          game_free(*game);
           (*game)=game_new();
           resize_windows(game_get_current_map(*game));
           return 0;
           break;
 
           case  SDLK_l:
+          game_free(*game);
           (*game)=load_save("./save/saved.txt");
           resize_windows(game_get_current_map(*game));
           return 0;
