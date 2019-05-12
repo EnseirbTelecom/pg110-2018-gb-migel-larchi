@@ -56,30 +56,6 @@ int check_str(char* char1,char* char2){
     return 1;
 }
 
-char* get_file_path(char* char1,char* char2){
-  //return char* with the relative path of a file by concatenating char1 and char2
-  char* char3 =  malloc( sizeof(char)* ( strlen(char1)+strlen(char2) + 2) ); // +2 = '/' + '\0'
-  char* char_aux=char3;
-
-  while ((*char1)!='\0') {
-    (*char_aux) = (*char1);
-    (char1)++;
-    (char_aux)++;
-  }
-
-  (*char_aux) = '/';
-  (char_aux)++;
-
-  while ((*char2)!='\0') {
-    (*char_aux) = (*char2);
-    (char2)++;
-    (char_aux)++;
-  }
-  (*char_aux) = '\0';
-
-  return char3;
-}
-
 int map_file_get_lvl(char* fname){
   assert(fname);
   char fname_cp[256];

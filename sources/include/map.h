@@ -105,6 +105,8 @@ struct map* map_init(char* path_file);
 // init  a array of map  from a path of a directory and word_set_name
 struct map** maps_init(char* path_dir,char* word_set_name,int* levels);
 
+struct map** maps_init_2(char* word_set_name,int levels);
+
 void maps_update(struct player *player, struct map** maps,int nb_lvl);
 
 void map_open_the_door(struct map* map,int x,int y) ;

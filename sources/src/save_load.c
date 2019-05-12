@@ -190,3 +190,24 @@ struct game* load_from_file(char* path_save) {
   struct map* map = game_get_current_map(game);
   return game;
 }
+
+struct game* load_loadfile(char* path_save) {
+  FILE* fichier = fopen(path_save,"r");
+
+  int levels;
+  fscanf(fichier,"%d\n",&levels);
+  int level,x,y;
+  fscanf(fichier,"%d:%d,%d",&level,&x,&y);
+
+  go_to_next_line(fichier);//sauter une ligne
+
+  char prefix[255];
+  fgets(prefix,255,fichier);
+  struct map** maps = maps_init_2(prefix,levels);
+  struct player* player = player_init(3);
+  player_set_position(player,x,y);
+
+  struct game* game = game_load(maps,levels,level,player);
+  struct map* map = game_get_current_map(game);
+  return game;
+}

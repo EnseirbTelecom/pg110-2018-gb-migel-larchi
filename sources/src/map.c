@@ -19,6 +19,7 @@
 #include <monster_list.h>
 #include <bomb_list.h>
 #include <map_file.h>
+#include <myfonct.h>
 
 
 struct map {
@@ -274,6 +275,7 @@ struct map* map_init(char* path_file){
 	return map;
 }
 
+
 struct map** maps_init(char* path_dir,char* word_set_name,int* levels){
 	char* path_file;
 	DIR *d;
@@ -315,6 +317,62 @@ struct map** maps_init(char* path_dir,char* word_set_name,int* levels){
 			(*levels)=i;
 	}
 	return maps;
+}
+
+char* get_name(char* world_name,int level){
+	char* file_name = malloc(sizeof(char)*(strlen("./map/")+strlen(world_name)+strlen("i.txt")+1));
+	char* char_aux = file_name;
+	char* char1="./map/";
+	//copie de "./map/" dans file_name="./map/"
+	while((*char1)!='\0'){
+			(*char_aux) = (*char1);
+			char_aux++;
+			char1++;
+	}
+
+	//copie de "world_name" dans file_name="./map/world_name"
+	while ((*world_name)!='\0') {
+		if((*world_name)!='\n'){
+			(*char_aux) = (*world_name);
+			(world_name)++;
+			(char_aux)++;
+		}else{
+			(world_name)++;
+		}
+	}
+
+	//copie de "level" dans file_name="./map/world_name_lvl"
+	(*char_aux) = '_';
+	(char_aux)++;
+	(*char_aux) = level+'0';
+	(char_aux)++;
+
+	//copie de "level" dans file_name="./map/world_name_lvl.txt"
+	char1=".txt";
+	while((*char1)!='\0'){
+			(*char_aux) = (*char1);
+			char_aux++;
+			char1++;
+	}
+
+
+	(*char_aux) = '\0';
+	return file_name;
+
+
+}
+
+struct map** maps_init_2(char* word_set_name,int levels){
+		struct map**	maps = malloc((levels)* sizeof(*maps));
+	 	char* file_name;
+		for (int i = 0; i < levels; i++) {
+
+				//creation du nom du fichier
+				file_name = get_name(word_set_name,i);
+				maps[i] = map_init(file_name);
+				free(file_name);
+		}
+		return maps;
 }
 
 struct bomb_list** map_get_bombs(struct map* map){

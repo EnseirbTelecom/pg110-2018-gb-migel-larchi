@@ -12,9 +12,6 @@ unsigned char* map_file_read(char* dir,int width,int height);
 
 int check_str(char* char1,char* char2);
 
-// get the file path when the have the dir path and file name
-char* get_file_path(char* char1,char* char2);
-
 //get the level from file name
 int map_file_get_lvl(char* path);
 

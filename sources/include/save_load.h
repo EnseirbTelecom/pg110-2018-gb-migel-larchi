@@ -11,5 +11,6 @@ struct game* load_save(char* path_save);
 
 // read chargement file
 struct game* load_from_file(char* path_save);
+struct game* load_loadfile(char* path_save);
 
 #endif
